@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/Prayas Scroll Wireframe.dc.html"
+    }
+  ]
+}
