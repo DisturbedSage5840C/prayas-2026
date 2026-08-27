@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Marcellus&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html{background:#0a0a0f}
+body{margin:0;background:#0a0a0f;color:#f5f5f7;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#ff2e9f;text-decoration:none}
+a:hover{color:#ed990f}
+@keyframes wf-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+@keyframes wf-floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes wf-drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-4%) scale(1.1)}100%{transform:translate(0,0) scale(1)}}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;pointer-events:none;z-index:60;opacity:{{ hudOpacity }};font-family:Rajdhani,sans-serif;font-weight:600">
+  <div style="position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,rgba(255,46,159,0),rgba(255,46,159,.45),rgba(255,46,159,0))"></div>
+  <div style="position:absolute;left:22px;top:16px;display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.24em;color:#9a9aa5">
+    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff2e9f;box-shadow:0 0 12px rgba(255,46,159,.9)"></span>
+    <span>PRAYAS &rsquo;26 &nbsp;/&nbsp; SCROLL WIREFRAME &nbsp;/&nbsp; V2</span>
+  </div>
+  <div style="position:absolute;right:22px;top:14px;display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:11px;letter-spacing:.16em;color:#9a9aa5">
+    <span>ACT 1 &nbsp;{{ pctLabel }}&nbsp;&nbsp;&middot;&nbsp;&nbsp;{{ timeLabel }}</span>
+    <span style="color:#ed990f">{{ phaseLabel }}</span>
+    <div style="width:190px;height:2px;background:rgba(245,245,247,.12)">
+      <div style="height:2px;background:#ff2e9f;box-shadow:0 0 10px rgba(255,46,159,.8);width:{{ pctLabel }}"></div>
+    </div>
+  </div>
+  <div style="position:absolute;left:22px;bottom:18px;max-width:300px;font-family:Inter,sans-serif;font-weight:400;font-size:10.5px;line-height:1.8;letter-spacing:.03em;color:#9a9aa5">
+    <div style="display:flex;gap:10px;font-family:Rajdhani,sans-serif;font-weight:600;letter-spacing:.2em;color:#9a9aa5"><span>[ WIREFRAME NOTES ]</span><span style="color:#ff2e9f">{{ armCountLabel }}</span></div>
+    <div>&mdash; paper-cutout dancer stands in for the halftone artwork</div>
+    <div>&mdash; particle field stands in for the Lottie / Rive dust</div>
+    <div>&mdash; copy inside dashed boxes is TBC</div>
+  </div>
+</div>
+
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background-color:#0a0a0f;background-image:repeating-linear-gradient(45deg,rgba(20,189,168,.05) 0 1px,rgba(10,10,15,0) 1px 22px),repeating-linear-gradient(-45deg,rgba(255,46,159,.045) 0 1px,rgba(10,10,15,0) 1px 22px),radial-gradient(130% 85% at 50% -10%,rgba(70,52,84,.55),rgba(10,10,15,0) 62%),radial-gradient(90% 60% at 50% 108%,rgba(186,18,90,.3),rgba(10,10,15,0) 60%)">
+  <div style="position:absolute;left:50%;top:42%;width:180vmax;height:180vmax;transform:translate(-50%,-50%) rotate({{ mandalaRotate }});background-image:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,46,159,.075) 0deg 1.4deg,rgba(10,10,15,0) 1.4deg 9deg),repeating-radial-gradient(circle at 50% 50%,rgba(237,153,15,.075) 0 1px,rgba(10,10,15,0) 1px 74px),repeating-radial-gradient(circle at 50% 50%,rgba(20,189,168,.055) 0 1px,rgba(10,10,15,0) 1px 222px);mask-image:radial-gradient(circle at 50% 50%,#000 8%,rgba(0,0,0,.55) 34%,transparent 62%);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 8%,rgba(0,0,0,.55) 34%,transparent 62%)"></div>
+  <div style="position:absolute;left:50%;top:42%;width:120vmax;height:120vmax;transform:translate(-50%,-50%) rotate({{ mandalaCounterRotate }});background-image:repeating-conic-gradient(from 6deg at 50% 50%,rgba(237,153,15,.06) 0deg .8deg,rgba(10,10,15,0) .8deg 22.5deg);mask-image:radial-gradient(circle at 50% 50%,transparent 14%,rgba(0,0,0,.8) 32%,transparent 55%);-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 14%,rgba(0,0,0,.8) 32%,transparent 55%)"></div>
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(235,254,255,.11) 1px,rgba(10,10,15,0) 1.4px);background-size:17px 17px;opacity:.55"></div>
+</div>
+
+<div style="position:relative;z-index:1;height:{{ act1Height }}">
+  <div style="position:sticky;top:0;height:100vh;overflow-x:clip">
+
+    <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(rgba(255,46,159,0),rgba(255,46,159,.18),rgba(255,46,159,0))"></div>
+
+    <div style="position:absolute;inset:0;overflow:hidden;filter:blur(52px);opacity:{{ waveOpacity }}">
+      <div style="position:absolute;left:{{ waveLx }};top:44%;width:42vw;height:42vw;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,46,159,.75),rgba(186,18,90,0) 68%);transform:translate(-50%,-50%) scale({{ waveLs }});opacity:{{ waveL }};animation:wf-drift 9s ease-in-out infinite"></div>
+      <div style="position:absolute;left:{{ waveLx }};top:57%;width:28vw;height:28vw;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(237,153,15,.6),rgba(237,153,15,0) 66%);transform:translate(-50%,-50%) scale({{ waveLs }});opacity:{{ waveL }};animation:wf-drift 11s ease-in-out infinite"></div>
+      <div style="position:absolute;left:{{ waveRx }};top:46%;width:42vw;height:42vw;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(20,189,168,.7),rgba(20,189,168,0) 68%);transform:translate(-50%,-50%) scale({{ waveRs }});opacity:{{ waveR }};animation:wf-drift 10s ease-in-out infinite"></div>
+      <div style="position:absolute;left:{{ waveRx }};top:58%;width:26vw;height:26vw;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(70,52,84,.95),rgba(70,52,84,0) 66%);transform:translate(-50%,-50%) scale({{ waveRs }});opacity:{{ waveR }};animation:wf-drift 13s ease-in-out infinite"></div>
+      <div style="position:absolute;left:50%;top:52%;width:62vw;height:62vw;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,46,159,.55),rgba(186,18,90,.3) 44%,rgba(10,10,15,0) 70%);transform:translate(-50%,-50%) scale({{ burstScale }});opacity:{{ burstOpacity }}"></div>
+    </div>
+
+    <div style="position:absolute;inset:0;pointer-events:none;filter:blur(.35px)">{{ dustLayer }}</div>
+
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:4.5vh 0 14vh;box-sizing:border-box;pointer-events:none">
+    <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:{{ heroOpacity }};transform:translateY({{ heroY }})">
+      <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.42em;color:#9a9aa5">PLAKSHA UNIVERSITY &nbsp;&middot;&nbsp; MARCH 2026</div>
+      <img src="assets/prayas-logo.svg" alt="Prayas" style="width:min(38vw,380px);height:auto;display:block;filter:drop-shadow(0 0 42px rgba(255,46,159,.4));animation:wf-floaty 6s ease-in-out infinite">
+      <div style="display:flex;align-items:center;gap:16px;font-family:Orbitron,sans-serif;font-weight:700;font-size:clamp(10px,1vw,13px);letter-spacing:.44em;color:#ed990f">
+        <span style="width:40px;height:1px;background:linear-gradient(90deg,rgba(237,153,15,0),#ed990f)"></span>INDIE TECH<span style="width:40px;height:1px;background:linear-gradient(90deg,#ed990f,rgba(237,153,15,0))"></span>
+      </div>
+    </div>
+
+    <div style="flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;padding:2.4vh 0">
+      <svg viewBox="0 46 400 452" style="height:100%;width:auto;max-width:44vw;overflow:visible;display:block;filter:drop-shadow(0 0 22px rgba(255,46,159,.28))">
+        <g transform="{{ figTransform }}" style="filter:drop-shadow(3px 5px 0 rgba(10,10,15,.45))">
+
+          <g opacity="{{ extraOpacity }}">
+            <circle cx="200" cy="150" r="74" fill="none" stroke="#ed990f" stroke-width="1.6" stroke-dasharray="2 10"></circle>
+            <circle cx="200" cy="150" r="88" fill="none" stroke="#ff2e9f" stroke-width="1.2" stroke-dasharray="1 14"></circle>
+          </g>
+
+          <g opacity="{{ extraOpacity }}">
+            <g transform="{{ xa1 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(-24)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><circle cx="0" cy="50" r="3" fill="#ed990f"></circle></g></g>
+            <g transform="{{ xa2 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(24)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><circle cx="0" cy="50" r="3" fill="#ed990f"></circle></g></g>
+            <g transform="{{ xa3 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(-30)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><rect x="-2" y="42" width="4" height="26" rx="2" fill="#ed990f"></rect></g></g>
+            <g transform="{{ xa4 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(30)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><rect x="-2" y="42" width="4" height="26" rx="2" fill="#ed990f"></rect></g></g>
+            <g transform="{{ xa5 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(-18)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><circle cx="0" cy="50" r="3" fill="#ed990f"></circle></g></g>
+            <g transform="{{ xa6 }}"><rect x="-9.5" y="-9.5" width="19" height="64" rx="9.5" fill="#463454"></rect><rect x="-7" y="-7" width="14" height="60" rx="7" fill="#ba125a"></rect><g transform="translate(0,56) rotate(18)"><rect x="-8.5" y="-8.5" width="17" height="58" rx="8.5" fill="#463454"></rect><rect x="-6" y="-6" width="12" height="54" rx="6" fill="#ba125a"></rect><circle cx="0" cy="50" r="7.5" fill="#ff2e9f"></circle><circle cx="0" cy="50" r="3" fill="#ed990f"></circle></g></g>
+          </g>
+
+          <g transform="{{ legLT }}">
+            <rect x="-11" y="-8" width="22" height="76" rx="11" fill="#ba125a"></rect>
+            <rect x="-8" y="-5" width="16" height="70" rx="8" fill="#ff2e9f"></rect>
+            <g transform="{{ legLKT }}">
+              <rect x="-10" y="-8" width="20" height="72" rx="10" fill="#ba125a"></rect>
+              <rect x="-7" y="-5" width="14" height="66" rx="7" fill="#ff2e9f"></rect>
+              <rect x="-10" y="44" width="20" height="7" rx="3.5" fill="#ed990f"></rect>
+              <ellipse cx="-3" cy="62" rx="13" ry="6.5" fill="#ebfeff"></ellipse>
+            </g>
+          </g>
+          <g transform="{{ legRT }}">
+            <rect x="-11" y="-8" width="22" height="76" rx="11" fill="#ba125a"></rect>
+            <rect x="-8" y="-5" width="16" height="70" rx="8" fill="#ff2e9f"></rect>
+            <g transform="{{ legRKT }}">
+              <rect x="-10" y="-8" width="20" height="72" rx="10" fill="#ba125a"></rect>
+              <rect x="-7" y="-5" width="14" height="66" rx="7" fill="#ff2e9f"></rect>
+              <rect x="-10" y="44" width="20" height="7" rx="3.5" fill="#ed990f"></rect>
+              <ellipse cx="3" cy="62" rx="13" ry="6.5" fill="#ebfeff"></ellipse>
+            </g>
+          </g>
+
+          <g transform="{{ skirtT }}">
+            <path d="M200,332 L90,404 L121.4,413.5 Z" fill="#ba125a"></path>
+            <path d="M200,332 L121.4,413.5 L152.9,421.2 Z" fill="#ff2e9f"></path>
+            <path d="M200,332 L152.9,421.2 L184.3,425.4 Z" fill="#ba125a"></path>
+            <path d="M200,332 L184.3,425.4 L215.7,425.4 Z" fill="#ff2e9f"></path>
+            <path d="M200,332 L215.7,425.4 L247.1,421.2 Z" fill="#ba125a"></path>
+            <path d="M200,332 L247.1,421.2 L278.6,413.5 Z" fill="#ff2e9f"></path>
+            <path d="M200,332 L278.6,413.5 L310,404 Z" fill="#ba125a"></path>
+            <path d="M90,404 L121.4,413.5 L152.9,421.2 L184.3,425.4 L215.7,425.4 L247.1,421.2 L278.6,413.5 L310,404" fill="none" stroke="#ed990f" stroke-width="7" stroke-linejoin="round"></path>
+            <path d="M90,404 L121.4,413.5 L152.9,421.2 L184.3,425.4 L215.7,425.4 L247.1,421.2 L278.6,413.5 L310,404" fill="none" stroke="#ebfeff" stroke-width="1.4" stroke-linejoin="round" opacity=".7"></path>
+          </g>
+
+          <path d="M181,206 L219,206 L215,340 L185,340 Z" fill="#ba125a"></path>
+          <path d="M186,206 L214,206 L211,338 L189,338 Z" fill="#ff2e9f"></path>
+          <path d="M176,200 L224,200 L221,258 L179,258 Z" fill="#463454"></path>
+          <path d="M176,200 L224,200 L223,212 L177,212 Z" fill="#ed990f"></path>
+          <path d="M186,216 Q200,232 214,216" fill="none" stroke="#ed990f" stroke-width="4"></path>
+          <rect x="180" y="320" width="40" height="13" rx="4" fill="#ed990f"></rect>
+          <rect x="184" y="323" width="32" height="3" rx="1.5" fill="#0d0e21" opacity=".35"></rect>
+
+          <g transform="{{ armLT }}">
+            <rect x="-10" y="-10" width="20" height="70" rx="10" fill="#ba125a"></rect>
+            <rect x="-7.5" y="-7.5" width="15" height="65" rx="7.5" fill="#ff2e9f"></rect>
+            <g transform="{{ armLFT }}">
+              <rect x="-9" y="-9" width="18" height="62" rx="9" fill="#ba125a"></rect>
+              <rect x="-6.5" y="-6.5" width="13" height="57" rx="6.5" fill="#ff2e9f"></rect>
+              <rect x="-9" y="36" width="18" height="6" rx="3" fill="#ed990f"></rect>
+              <circle cx="0" cy="54" r="9.5" fill="#ebfeff"></circle>
+              <rect x="-2.2" y="44" width="4.4" height="30" rx="2.2" fill="#ed990f" transform="rotate(26 0 54)"></rect>
+            </g>
+          </g>
+          <g transform="{{ armRT }}">
+            <rect x="-10" y="-10" width="20" height="70" rx="10" fill="#ba125a"></rect>
+            <rect x="-7.5" y="-7.5" width="15" height="65" rx="7.5" fill="#ff2e9f"></rect>
+            <g transform="{{ armRFT }}">
+              <rect x="-9" y="-9" width="18" height="62" rx="9" fill="#ba125a"></rect>
+              <rect x="-6.5" y="-6.5" width="13" height="57" rx="6.5" fill="#ff2e9f"></rect>
+              <rect x="-9" y="36" width="18" height="6" rx="3" fill="#ed990f"></rect>
+              <circle cx="0" cy="54" r="9.5" fill="#ebfeff"></circle>
+              <rect x="-2.2" y="44" width="4.4" height="30" rx="2.2" fill="#ed990f" transform="rotate(-26 0 54)"></rect>
+            </g>
+          </g>
+
+          <g transform="{{ headT }}">
+            <rect x="192" y="176" width="16" height="30" fill="#ba125a"></rect>
+            <circle cx="200" cy="114" r="16" fill="#0d0e21"></circle>
+            <circle cx="200" cy="114" r="7" fill="#463454"></circle>
+            <circle cx="200" cy="152" r="35" fill="#0d0e21"></circle>
+            <circle cx="200" cy="155" r="27" fill="#ff2e9f"></circle>
+            <path d="M170,140 A 31 31 0 0 1 230,140" fill="none" stroke="#ed990f" stroke-width="5"></path>
+            <circle cx="200" cy="122" r="4" fill="#ed990f"></circle>
+            <circle cx="200" cy="146" r="3.6" fill="#ed990f"></circle>
+            <ellipse cx="190" cy="158" rx="5" ry="3" fill="#0d0e21"></ellipse>
+            <ellipse cx="210" cy="158" rx="5" ry="3" fill="#0d0e21"></ellipse>
+            <circle cx="172" cy="164" r="4.6" fill="#ed990f"></circle>
+            <circle cx="228" cy="164" r="4.6" fill="#ed990f"></circle>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    </div>
+
+    <div style="position:absolute;left:4vw;top:50%;width:min(30vw,390px);transform:translateY(-50%) translateX({{ e1x }});opacity:{{ e1 }}">
+      <div style="display:flex;flex-direction:column;gap:16px;padding:26px;border:1px solid rgba(255,46,159,.28);border-radius:6px;background:rgba(13,14,33,.66);backdrop-filter:blur(8px);box-shadow:0 0 34px rgba(255,46,159,.18)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.24em;color:#ff2e9f">
+          <span>EVENT 01</span><span style="color:#9a9aa5">LEFT HAND</span>
+        </div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:800;font-size:clamp(24px,2.9vw,38px);line-height:1.04;letter-spacing:-.01em;color:#f5f5f7;text-shadow:0 0 18px rgba(255,46,159,.45)">EVENT<br>NAME ONE</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+          <div style="height:9px;width:62%;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;height:104px;border:1px dashed rgba(255,46,159,.3);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;color:#9a9aa5">POSTER / KEY VISUAL</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="padding:10px 20px;border:1px solid #ff2e9f;border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;color:#f5f5f7;box-shadow:0 0 20px rgba(255,46,159,.28)">REGISTER</div>
+          <div style="font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:.06em;color:#9a9aa5">date &middot; venue TBC</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;right:4vw;top:50%;width:min(30vw,390px);transform:translateY(-50%) translateX({{ e2x }});opacity:{{ e2 }}">
+      <div style="display:flex;flex-direction:column;gap:16px;padding:26px;border:1px solid rgba(20,189,168,.3);border-radius:6px;background:rgba(13,14,33,.66);backdrop-filter:blur(8px);box-shadow:0 0 34px rgba(20,189,168,.16)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.24em;color:#14bda8">
+          <span>EVENT 02</span><span style="color:#9a9aa5">RIGHT HAND</span>
+        </div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:800;font-size:clamp(24px,2.9vw,38px);line-height:1.04;letter-spacing:-.01em;color:#f5f5f7;text-shadow:0 0 18px rgba(20,189,168,.4)">EVENT<br>NAME TWO</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+          <div style="height:9px;width:54%;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;height:104px;border:1px dashed rgba(20,189,168,.32);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;color:#9a9aa5">POSTER / KEY VISUAL</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="padding:10px 20px;border:1px solid #14bda8;border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;color:#f5f5f7;box-shadow:0 0 20px rgba(20,189,168,.26)">REGISTER</div>
+          <div style="font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:.06em;color:#9a9aa5">date &middot; venue TBC</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;left:0;right:0;bottom:8.5vh;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:{{ lockOpacity }}">
+      <div style="font-family:Marcellus,serif;font-size:clamp(15px,1.6vw,23px);line-height:1.5;letter-spacing:.01em;color:#ebfeff;text-align:center;max-width:660px;text-wrap:pretty">We are excited to announce Prayas &rsquo;26, Plaksha&rsquo;s first standalone technology festival.</div>
+      <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.3em;color:#ed990f">EIGHT ARMS &middot; THREE EVENTS &middot; ONE FEST</div>
+    </div>
+
+    <div style="position:absolute;left:0;right:0;bottom:5vh;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:{{ cueOpacity }};animation:wf-bob 2.2s ease-in-out infinite">
+      <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.3em;color:#9a9aa5">SCROLL</div>
+      <div style="width:1px;height:34px;background:linear-gradient(rgba(255,46,159,.7),rgba(255,46,159,0))"></div>
+    </div>
+
+  </div>
+</div>
+
+<section data-screen-label="Hackathon" style="position:relative;z-index:1;padding:12vh 6vw 12vh;overflow-x:clip">
+  <div style="position:absolute;left:50%;top:-30vh;width:74vw;height:74vw;transform:translateX(-50%);filter:blur(80px);opacity:{{ hackGlow }};background:radial-gradient(circle at 50% 50%,rgba(255,46,159,.4),rgba(70,52,84,.28) 46%,rgba(10,10,15,0) 72%);pointer-events:none"></div>
+  <div style="position:absolute;left:50%;top:-6vh;width:1px;height:18vh;transform:translateX(-50%);background:linear-gradient(rgba(255,46,159,0),rgba(255,46,159,.5),rgba(255,46,159,0));pointer-events:none"></div>
+
+  <div style="position:relative;display:flex;flex-direction:column;gap:58px;max-width:1180px;margin:0 auto">
+    <div style="display:flex;flex-direction:column;gap:18px;opacity:{{ hackIn }};transform:translateY({{ hackY }})">
+      <div style="display:flex;align-items:center;gap:16px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.3em;color:#ed990f">
+        <span>EVENT 03 &nbsp;/&nbsp; THE FINALE</span><span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(237,153,15,.4),rgba(237,153,15,0))"></span>
+      </div>
+      <div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(42px,7.4vw,116px);line-height:.94;letter-spacing:-.02em;color:#f5f5f7;text-shadow:0 0 30px rgba(255,46,159,.4)">THE<br>HACKATHON</div>
+      <div style="font-family:Marcellus,serif;font-size:clamp(16px,1.7vw,24px);line-height:1.55;max-width:660px;color:#ebfeff;text-wrap:pretty">36 hours, one campus, eight directions to build in. Placeholder copy &mdash; final blurb TBC.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:22px">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">WHEN</div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">TBC</div>
+        <div style="height:8px;width:70%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">DURATION</div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">36 HRS</div>
+        <div style="height:8px;width:56%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">PRIZE POOL</div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">TBC</div>
+        <div style="height:8px;width:64%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">TEAM SIZE</div>
+        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">2&ndash;4</div>
+        <div style="height:8px;width:44%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.26em;color:#9a9aa5">TRACKS &mdash; ONE PER ARM</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ff2e9f">01</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ed990f">02</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#14bda8">03</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ebfeff">04</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ba125a">05</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#463454">06</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;padding:28px;border:1px solid rgba(255,46,159,.24);border-radius:6px;background:rgba(70,52,84,.2)">
+        <div style="font-family:Orbitron,sans-serif;font-weight:800;font-size:26px;line-height:1.1;color:#f5f5f7">Applications<br>open soon</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+          <div style="height:9px;width:72%;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:15px;border-radius:4px;background:#ff2e9f;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;letter-spacing:.2em;color:#0a0a0f;box-shadow:0 0 24px rgba(255,46,159,.35),0 0 4px rgba(255,46,159,.6)">JOIN THE HACK</div>
+        <div style="font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:.06em;color:#9a9aa5">form link TBC</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;padding-top:34px;border-top:1px solid rgba(255,46,159,.16);font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#9a9aa5">
+      <img src="assets/prayas-logo.svg" alt="Prayas" style="height:26px;width:auto;display:block;opacity:.85">
+      <span>INSTAGRAM &nbsp;/&nbsp; MAIL &nbsp;/&nbsp; SPONSOR DECK</span>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;actLength&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:460,&quot;min&quot;:260,&quot;max&quot;:800,&quot;step&quot;:20,&quot;unit&quot;:&quot;vh&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Scroll&quot;},&quot;smoothing&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.085,&quot;min&quot;:0.03,&quot;max&quot;:0.3,&quot;step&quot;:0.005,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Scroll&quot;},&quot;revealStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;both&quot;,&quot;options&quot;:[&quot;dust&quot;,&quot;waves&quot;,&quot;both&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Reveal&quot;},&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Wireframe&quot;}}">
+class Component extends DCLogic {
+  state = { y: 0, vh: 900, vw: 1400, time: 0 };
+
+  componentDidMount() {
+    this._live = true;
+    this._smooth = window.scrollY || 0;
+    this._t0 = performance.now();
+    const loop = () => {
+      if (!this._live) return;
+      const target = window.scrollY || 0;
+      const k = this.props.smoothing ?? 0.085;
+      const d = target - this._smooth;
+      this._smooth += Math.abs(d) < 0.35 ? d : d * k;
+      const st = this.state;
+      const time = Math.round((performance.now() - this._t0) / 33.3) / 30;
+      if (time !== st.time || Math.abs(this._smooth - st.y) > 0.12 || st.vh !== window.innerHeight || st.vw !== window.innerWidth) {
+        this.setState({ y: this._smooth, time: time, vh: window.innerHeight, vw: window.innerWidth });
+      }
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { this._live = false; cancelAnimationFrame(this._raf); }
+
+  pt(x, y, a, l) { const r = a * Math.PI / 180; return { x: x + Math.cos(r) * l, y: y + Math.sin(r) * l }; }
+  n(v) { return Math.round(v * 10) / 10; }
+  arm(sx, sy, a1, l1, a2, l2, stick) {
+    const e = this.pt(sx, sy, a1, l1), h = this.pt(e.x, e.y, a2, l2);
+    const N = (v) => this.n(v);
+    let d = `M${N(sx)},${N(sy)}L${N(e.x)},${N(e.y)}L${N(h.x)},${N(h.y)}`;
+    if (stick > 1) {
+      const s1 = this.pt(h.x, h.y, a2 - 92, stick / 2), s2 = this.pt(h.x, h.y, a2 + 88, stick / 2);
+      d += `M${N(s1.x)},${N(s1.y)}L${N(s2.x)},${N(s2.y)}`;
+    }
+    return d;
+  }
+
+  renderVals() {
+    const cl = (v, a, b) => Math.min(b === undefined ? 1 : b, Math.max(a === undefined ? 0 : a, v));
+    const sg = (a, b, t) => cl((t - a) / (b - a));
+    const ez = (x) => x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    const mix = (a, b, k) => a + (b - a) * k;
+
+    const lenVh = this.props.actLength ?? 460;
+    const mode = this.props.revealStyle ?? 'both';
+    const vh = this.state.vh;
+    const span = Math.max(1, vh * lenVh / 100 - vh);
+    const p = cl(this.state.y / span);
+
+    // ---- dance timing: idle -> point left -> point right -> centre -> transform -> stand
+    let s, phase;
+    if (p < 0.14) { s = 0.20 * Math.sin(p * 44); phase = 'INTRO / IDLE SWAY'; }
+    else if (p < 0.30) { s = -ez(sg(0.14, 0.30, p)); phase = 'SWEEP LEFT'; }
+    else if (p < 0.42) { s = -1 + 0.09 * Math.sin((p - 0.30) * 58); phase = 'HOLD LEFT / EVENT 01'; }
+    else if (p < 0.58) { s = -1 + 2 * ez(sg(0.42, 0.58, p)); phase = 'SWEEP RIGHT'; }
+    else if (p < 0.70) { s = 1 - 0.09 * Math.sin((p - 0.58) * 58); phase = 'HOLD RIGHT / EVENT 02'; }
+    else if (p < 0.80) { s = 1 - ez(sg(0.70, 0.80, p)); phase = 'RETURN TO CENTRE'; }
+    else { s = 0; phase = p < 0.95 ? 'TRANSFORM / 8 ARMS' : 'STANDING / STATIC'; }
+
+    const t = ez(sg(0.80, 0.95, p));   // 2 arms -> 8 arms
+    const st = ez(sg(0.86, 1.0, p));   // dance pose -> standing upright
+
+    // ---- paper-cutout joint rig. angles are degrees from straight down,
+    //      positive rotates toward screen-left. l3 = left / centre / right pose.
+    const time = this.state.time || 0;
+    const idle = (f, ph) => Math.sin(time * f + ph);
+    const l3 = (a, b, c, k) => k < 0 ? b + (a - b) * (-k) : b + (c - b) * k;
+    const R = (a) => this.n(a);
+    const live = 1 - 0.55 * st;
+
+    const aL = mix(l3(155, 138, -100, s), 148, st) + idle(1.25, 0) * 2.4 * live;
+    const aR = mix(l3(100, -138, -155, s), -148, st) + idle(1.25, 1.7) * 2.4 * live;
+    const fL = mix(l3(-32, -20, 20, s), -13, st) + idle(1.65, 0.4) * 3.2 * live;
+    const fR = mix(l3(-20, 20, 32, s), 13, st) + idle(1.65, 2.2) * 3.2 * live;
+
+    const lL = mix(-4 + s * 3, -2, st) + idle(1.1, 0.8) * 0.9 * live;
+    const kL = mix(8, 0, st);
+    const lR = mix(-46 + s * 6, 3, st) + idle(1.1, 2.4) * 1.4 * live;
+    const kR = mix(62, 0, st);
+
+    const fan = [[180, 214, 168], [220, 214, -168], [178, 226, 132], [222, 226, -132], [184, 204, 100], [216, 204, -100]];
+    const xa = fan.map((f, i) => {
+      const g = cl((t - i * 0.05) / 0.5);
+      return `translate(${f[0]},${f[1]}) rotate(${R(f[2] + idle(1.15, i * 1.1) * 2.6)}) scale(${this.n(0.001 + g * 0.999)})`;
+    });
+
+    const skA = mix(-s * 6, 0, st) + idle(1.05, 0.3) * 1.8 * live;
+    const skX = mix(1, 0.9, st) + idle(0.9, 1.2) * 0.022;
+    const skirtT = `rotate(${R(skA)} 200 332) translate(200,332) scale(${this.n(skX)},1) translate(-200,-332)`;
+    const headT = `rotate(${R(mix(s * 8, 0, st) + idle(1.4, 0.9) * 1.6 * live)} 200 200)`;
+    const figTransform = `translate(0 ${this.n(-3.5 * idle(1, 0) - 7 * Math.abs(s) * (1 - st) - 6 * t * (1 - st))}) rotate(${this.n(s * 3.4 * (1 - st))} 200 332) scale(${this.n(1 + 0.05 * t)})`;
+
+    // ---- reveals
+    const e1 = sg(0.20, 0.30, p) * (1 - sg(0.40, 0.50, p));
+    const e2 = sg(0.52, 0.62, p) * (1 - sg(0.72, 0.80, p));
+    const burst = sg(0.80, 0.90, p) * (1 - sg(0.96, 1.0, p) * 0.5);
+
+    const wavesOn = (mode === 'waves' || mode === 'both') ? 1 : 0.1;
+    const dustOn = (mode === 'dust' || mode === 'both') ? 1 : 0;
+
+    // ---- fine dust: many small, soft motes rather than few big dots
+    const dust = [];
+    const active = Math.max(e1, e2, burst);
+    if (dustOn && active > 0.006) {
+      const cols = ['#ff2e9f', '#ba125a', '#ed990f', '#14bda8', '#ebfeff', '#f5f5f7'];
+      const isBurst = burst > Math.max(e1, e2);
+      const spread = isBurst ? 360 : 128;
+      const centre = isBurst ? -90 : (e1 > e2 ? 196 : 344);
+      const ar = this.state.vh / Math.max(600, this.state.vw);
+      for (let i = 0; i < 150; i++) {
+        const r1 = Math.abs(Math.sin(i * 12.9898) * 43758.5453) % 1;
+        const r2 = Math.abs(Math.sin(i * 78.233 + 4.1) * 12345.6789) % 1;
+        const r3 = Math.abs(Math.sin(i * 31.41 + 9.7) * 9876.54321) % 1;
+        const r4 = Math.abs(Math.sin(i * 5.77 + 2.3) * 5432.1) % 1;
+        const a = (centre + (r1 - 0.5) * spread) * Math.PI / 180;
+        const reach = (5 + Math.pow(r2, 0.7) * 38) * (0.3 + active * 0.95);
+        dust.push({
+          x: this.n(50 + Math.cos(a) * reach * (ar * 1.5 + 0.5)),
+          y: this.n(52 + Math.sin(a) * reach * 0.88),
+          s: this.n(0.9 + r3 * 2.3 + (r4 > 0.94 ? 1.6 : 0)),
+          c: cols[i % cols.length],
+          o: this.n(cl(active * (0.12 + r3 * 0.55)) * 0.8)
+        });
+      }
+    }
+    const dustLayer = dust.map((d, i) => React.createElement('div', {
+      key: i,
+      style: {
+        position: 'absolute', left: d.x + '%', top: d.y + '%',
+        width: d.s + 'px', height: d.s + 'px', borderRadius: '50%',
+        background: d.c, opacity: d.o,
+        boxShadow: '0 0 ' + this.n(d.s * 2.4) + 'px ' + d.c
+      }
+    }));
+
+    return {
+      dustLayer,
+      act1Height: lenVh + 'vh',
+      mandalaRotate: this.n(this.state.y * 0.014) + 'deg',
+      mandalaCounterRotate: this.n(-this.state.y * 0.026) + 'deg',
+      hudOpacity: (this.props.showAnnotations ?? true) ? 1 : 0,
+      pctLabel: Math.round(p * 100) + '%',
+      timeLabel: (p * 8).toFixed(1) + 's / 8.0s',
+      phaseLabel: phase,
+      armCountLabel: t > 0.5 ? '8 ARMS' : '2 ARMS',
+
+      figTransform, skirtT, headT,
+      armLT: `translate(176,208) rotate(${R(aL)})`,
+      armRT: `translate(224,208) rotate(${R(aR)})`,
+      armLFT: `translate(0,60) rotate(${R(fL)})`,
+      armRFT: `translate(0,60) rotate(${R(fR)})`,
+      legLT: `translate(188,330) rotate(${R(lL)})`,
+      legRT: `translate(212,330) rotate(${R(lR)})`,
+      legLKT: `translate(0,64) rotate(${R(kL)})`,
+      legRKT: `translate(0,64) rotate(${R(kR)})`,
+      xa1: xa[0], xa2: xa[1], xa3: xa[2], xa4: xa[3], xa5: xa[4], xa6: xa[5],
+      extraOpacity: this.n(cl(t * 1.4)),
+
+      heroOpacity: this.n(1 - sg(0.05, 0.18, p) * 0.9),
+      heroY: this.n(-sg(0.05, 0.3, p) * 40) + 'px',
+      cueOpacity: this.n(1 - sg(0.02, 0.1, p)),
+
+      e1: this.n(e1), e2: this.n(e2),
+      e1x: this.n(-46 * (1 - ez(e1))) + 'px',
+      e2x: this.n(46 * (1 - ez(e2))) + 'px',
+
+      waveOpacity: this.n(wavesOn),
+      waveL: this.n(e1 * 0.95), waveR: this.n(e2 * 0.95),
+      waveLs: this.n(0.55 + e1 * 0.6), waveRs: this.n(0.55 + e2 * 0.6),
+      waveLx: this.n(26 + (1 - e1) * 10) + '%',
+      waveRx: this.n(74 - (1 - e2) * 10) + '%',
+      burstOpacity: this.n(burst * 0.9), burstScale: this.n(0.25 + burst * 0.85),
+
+      lockOpacity: this.n(sg(0.90, 1.0, p)),
+
+      hackIn: this.n(sg(0.98, 1.0, p) * 0.35 + 0.65),
+      hackY: this.n((1 - sg(0.97, 1.0, p)) * 26) + 'px',
+      hackGlow: this.n(0.3 + sg(0.9, 1.0, p) * 0.4)
+    };
+  }
+}
+</script>
+</body>
+</html>
