@@ -155,102 +155,126 @@ a:hover{color:#ed990f}
     </div>
 
     <div style="position:absolute;left:3.5vw;top:50%;width:min(32vw,420px);transform:translateY(-50%) translateX({{ e1x }});opacity:{{ e1 }}">
-      <div style="position:relative;background:#f4ecdb;color:#0a0a0f;padding:18px 18px 14px;box-shadow:6px 8px 0 rgba(0,0,0,.38),0 18px 40px rgba(0,0,0,.45);overflow:hidden">
+      <div style="position:relative;background:#f4ecdb;color:#0a0a0f;padding:16px 16px 10px;box-shadow:6px 8px 0 rgba(0,0,0,.38),0 18px 40px rgba(0,0,0,.45);overflow:hidden">
         <div style="position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#0a0a0f 0.8px,transparent 0.8px);background-size:7px 7px;pointer-events:none"></div>
-        <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px">
-          <div style="display:flex;align-items:center;gap:8px;font-family:Special Elite,monospace;font-size:11px;letter-spacing:.14em">
-            <span style="width:14px;height:14px;display:grid;place-items:center;font-size:14px;line-height:1;color:#0a0a0f">+</span>
-            <span>EVENT 01</span>
-            <span style="flex:1;min-width:80px;height:1px;border-top:1px dashed rgba(10,10,15,.35);margin-left:6px"></span>
-          </div>
+        <div style="position:absolute;left:10px;top:52%;bottom:22%;width:48px;opacity:.55;background-image:radial-gradient(#b89455 1px,transparent 1px);background-size:6px 6px;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);pointer-events:none"></div>
+        <div style="position:relative;display:flex;align-items:center;gap:6px;padding-bottom:8px">
+          <span style="color:#ba125a;font-size:18px;line-height:1;filter:drop-shadow(0 0 1px rgba(186,18,90,.3))">❋</span>
+          <span style="font-family:Special Elite,monospace;font-size:11px;letter-spacing:.14em">EVENT 01</span>
+          <span style="flex:1;height:1px;border-top:1px dashed #ba125a;opacity:.55;margin:0 4px"></span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;background:#ba125a;transform:rotate(45deg);border:1px solid #ba125a"></span><span style="width:7px;height:7px;background:#f4ecdb;transform:rotate(45deg);border:1px solid #ba125a"></span><span style="width:7px;height:7px;background:#14bda8;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#ba125a;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#f4ecdb;transform:rotate(45deg);border:1px solid #14bda8"></span><span style="width:7px;height:7px;background:#ba125a;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#14bda8;transform:rotate(45deg)"></span></span>
+          <span style="flex:1;height:1px;border-top:1px dashed #ba125a;opacity:.55;margin:0 4px"></span>
           <div style="width:26px;height:26px;border:1.4px solid #0a0a0f;display:grid;place-items:center;font-family:Inter,sans-serif;font-weight:700;font-size:16px;line-height:1">×</div>
         </div>
         <div style="position:relative;display:grid;grid-template-columns:1.25fr 0.85fr;gap:12px;align-items:start">
-          <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;align-items:flex-start;gap:6px">
-              <div style="font-family:Anton,sans-serif;font-size:clamp(36px,3.2vw,48px);line-height:.86;letter-spacing:-.02em;text-transform:uppercase">EVENT<br/>NAME</div>
-              <div style="margin-top:4px;width:54px;height:30px;border:1.2px solid #0a0a0f;border-radius:50%;display:grid;place-items:center;font-family:Caveat,cursive;font-weight:600;font-size:18px;transform:rotate(-6deg)">01</div>
+              <div style="font-family:Anton,sans-serif;font-size:clamp(38px,3.3vw,50px);line-height:.84;letter-spacing:-.03em;text-transform:uppercase">EVENT<br/>NAME</div>
+              <div style="margin-top:2px;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:56px;height:30px;border:1.6px solid #c94a2e;border-radius:50%;display:grid;place-items:center;font-family:Caveat,cursive;font-weight:600;font-size:18px;transform:rotate(-5deg);color:#0a0a0f">01</div>
+                <div style="width:34px;height:10px;opacity:.7;background-image:radial-gradient(#14bda8 1.2px,transparent 1.2px);background-size:7px 7px;transform:rotate(-4deg)"></div>
+              </div>
             </div>
-            <div style="align-self:flex-start;background:#0a0a0f;color:#f4ecdb;padding:5px 10px;font-family:Special Elite,monospace;font-size:10px;letter-spacing:.12em;transform:rotate(-0.6deg)">TAGLINE GOES HERE</div>
-            <div style="display:flex;flex-direction:column;margin-top:4px">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>DATE</span><span>→</span><span>DD MMM YYYY</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>TIME</span><span>→</span><span>00:00 AM / PM</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>VENUE</span><span>→</span><span>VENUE NAME</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>TYPE</span><span>→</span><span>WORKSHOP / TALK</span></div>
+            <div style="position:relative;align-self:flex-start;background:#1a0b2e;color:#f4ecdb;padding:6px 10px 6px;font-family:Special Elite,monospace;font-size:10px;letter-spacing:.12em;transform:rotate(-0.6deg);margin-left:2px">
+              <div style="position:absolute;left:0;right:0;top:-4px;height:4px;background:repeating-linear-gradient(90deg,#ba125a 0 4px,#ed990f 4px 8px,#14bda8 8px 12px,#f4ecdb 12px 14px);opacity:.9"></div>
+              TAGLINE GOES HERE
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;color:#ba125a;font-size:9px;margin-top:2px;opacity:.9"><span style="font-size:11px">↷</span><span style="width:18px;height:1px;background:none;border-top:1px solid #ba125a;opacity:.4"></span></div>
+            <div style="display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #c94a2e;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;border:1px solid #ba125a;border-radius:2px;color:#ba125a;font-size:8px">▦</span><span>DATE</span><span style="margin-left:auto">→</span><span>DD MMM YYYY</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #ed990f;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;border:1px solid #ed990f;border-radius:50%;color:#ed990f;font-size:9px">◷</span><span>TIME</span><span style="margin-left:auto">→</span><span>00:00 AM / PM</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #14bda8;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;color:#14bda8;font-size:11px">📍</span><span>VENUE</span><span style="margin-left:auto">→</span><span>VENUE NAME</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #463454;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;color:#463454;font-size:10px">🎙</span><span>TYPE</span><span style="margin-left:auto">→</span><span>WORKSHOP / TALK</span></div>
             </div>
           </div>
           <div style="position:relative;height:100%;min-height:214px;background:#0a0a0f;border:1px solid rgba(10,10,15,.15);overflow:hidden;clip-path:polygon(0 3%,3% 0,97% 0,100% 2%,100% 97%,98% 100%,2% 100%,0 98%);transform:rotate(0.4deg)">
-            <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,rgba(255,46,159,.04) 0 1px,transparent 1px 10px),linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,0));color:#9a9aa5;font-family:Rajdhani,sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;text-align:center;padding:12px">IMAGE<br/>PLACEHOLDER</div>
+            <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,rgba(255,46,159,.05) 0 1px,transparent 1px 10px),linear-gradient(rgba(255,255,255,.03),rgba(255,255,255,0));color:#9a9aa5;font-family:Rajdhani,sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;text-align:center;padding:12px">IMAGE<br/>PLACEHOLDER</div>
             <div style="position:absolute;top:8px;right:8px;background:#f4ecdb;color:#0a0a0f;padding:6px 8px;font-family:Special Elite,monospace;font-size:8px;line-height:1.2;letter-spacing:.08em;box-shadow:1px 2px 0 rgba(0,0,0,.2);transform:rotate(2deg);border-left:3px solid #ff2e9f">INDIE TECH<br/>REAL IMPACT</div>
+            <div style="position:absolute;right:2px;top:28px;bottom:22px;width:14px;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.95"><span style="font-size:10px">🌼</span><span style="flex:1;width:2px;background:linear-gradient(#14bda8,#14bda8);opacity:.5"></span><span style="width:6px;height:6px;border-radius:50%;background:#ed990f"></span><span style="flex:1;width:2px;background:linear-gradient(#14bda8,#14bda8);opacity:.5"></span><span style="font-size:10px">🌼</span></div>
             <div style="position:absolute;right:8px;bottom:8px;width:42px;height:42px;border:1px solid rgba(245,245,247,.7);display:grid;place-items:center;color:#f5f5f7;opacity:.85">
               <div style="width:22px;height:22px;border:1px solid #f5f5f7;border-radius:50%;display:grid;place-items:center"><div style="width:10px;height:10px;border:1px solid #f5f5f7;border-radius:50%"></div></div>
             </div>
           </div>
         </div>
-        <div style="position:relative;display:grid;grid-template-columns:1.15fr 0.85fr;gap:12px;align-items:end;margin-top:14px">
-          <div style="position:relative;border:1px dashed rgba(10,10,15,.45);padding:10px 12px 10px;display:flex;flex-direction:column;gap:2px">
-            <span style="position:absolute;left:-4px;top:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px;line-height:1">+</span><span style="position:absolute;right:-4px;top:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span><span style="position:absolute;left:-4px;bottom:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span><span style="position:absolute;right:-4px;bottom:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span>
-            <div style="font-family:Special Elite,monospace;font-size:9px;letter-spacing:.14em;opacity:.7">LIMITED SEATS</div>
-            <div style="display:flex;align-items:center;gap:8px;font-family:Anton,sans-serif;font-size:16px;letter-spacing:.04em">REGISTER NOW <span style="font-family:Inter,sans-serif;font-weight:300">→</span></div>
-            <div style="height:2px;background:#0a0a0f;opacity:.8;width:88%;margin-top:1px;transform:rotate(-0.4deg)"></div>
+        <div style="position:relative;display:grid;grid-template-columns:1.15fr 0.85fr;gap:12px;align-items:end;margin-top:12px">
+          <div style="position:relative;border:1px dashed #c94a2e;padding:11px 12px 10px;display:flex;flex-direction:column;gap:2px;background:rgba(244,236,219,.45)">
+            <span style="position:absolute;left:4px;top:4px;color:#14bda8;font-size:10px">❧</span><span style="position:absolute;right:4px;top:4px;color:#c94a2e;font-size:7px">◆</span><span style="position:absolute;left:4px;bottom:4px;color:#14bda8;font-size:10px">❧</span><span style="position:absolute;right:4px;bottom:4px;color:#14bda8;font-size:10px">❧</span>
+            <div style="font-family:Special Elite,monospace;font-size:9px;letter-spacing:.14em;opacity:.7;text-align:center">LIMITED SEATS</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-family:Anton,sans-serif;font-size:15px;letter-spacing:.04em">REGISTER NOW <span style="font-family:Inter,sans-serif;font-weight:300">→</span></div>
+            <div style="height:3px;background:repeating-linear-gradient(90deg,#c94a2e 0 14px,transparent 14px 16px);opacity:.85;width:76%;margin:2px auto 0;transform:rotate(-0.4deg)"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px">
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;position:relative">
             <span style="font-size:18px;line-height:1">←</span>
-            <span style="font-family:Caveat,cursive;font-size:13px;line-height:1.15;opacity:.85">bring your<br/>ideas. leave<br/>with more.</span>
-            <span style="margin-left:auto;writing-mode:vertical-rl;font-family:Special Elite,monospace;font-size:8px;letter-spacing:.18em;opacity:.5">PRAYAS 2026</span>
+            <span style="font-family:Caveat,cursive;font-size:12px;line-height:1.15;opacity:.85">bring your<br/>ideas. leave<br/>with more.</span>
+            <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:46px;height:46px;border-radius:50% 40% 46% 38%;background:radial-gradient(circle at 30% 30%,#ed990f,#c94a2e 45%,#1a0b2e 72%);border:2px solid #0a0a0f;display:grid;place-items:center;font-size:16px;color:#f4ecdb">🪷</div>
+              <span style="writing-mode:vertical-rl;font-family:Special Elite,monospace;font-size:7px;letter-spacing:.16em;opacity:.55">PRAYAS 2026</span>
+            </div>
           </div>
         </div>
-        <div style="position:relative;margin-top:12px;height:1px;border-top:1px dashed rgba(10,10,15,.2)"></div>
+        <div style="position:relative;margin-top:10px;height:6px;background:repeating-linear-gradient(90deg,#ba125a 0 6px,#14bda8 6px 10px,#ed990f 10px 14px,#0a0a0f 14px 16px);opacity:.7;mask-image:linear-gradient(to right,#000 92%,transparent);-webkit-mask-image:linear-gradient(to right,#000 92%,transparent)"></div>
       </div>
     </div>
 
     <div style="position:absolute;right:3.5vw;top:50%;width:min(32vw,420px);transform:translateY(-50%) translateX({{ e2x }});opacity:{{ e2 }}">
-      <div style="position:relative;background:#f4ecdb;color:#0a0a0f;padding:18px 18px 14px;box-shadow:6px 8px 0 rgba(0,0,0,.38),0 18px 40px rgba(0,0,0,.45);overflow:hidden">
+      <div style="position:relative;background:#f4ecdb;color:#0a0a0f;padding:16px 16px 10px;box-shadow:6px 8px 0 rgba(0,0,0,.38),0 18px 40px rgba(0,0,0,.45);overflow:hidden">
         <div style="position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#0a0a0f 0.8px,transparent 0.8px);background-size:7px 7px;pointer-events:none"></div>
-        <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px">
-          <div style="display:flex;align-items:center;gap:8px;font-family:Special Elite,monospace;font-size:11px;letter-spacing:.14em">
-            <span style="width:14px;height:14px;display:grid;place-items:center;font-size:14px;line-height:1;color:#0a0a0f">+</span>
-            <span>EVENT 02</span>
-            <span style="flex:1;min-width:80px;height:1px;border-top:1px dashed rgba(10,10,15,.35);margin-left:6px"></span>
-          </div>
+        <div style="position:absolute;left:10px;top:52%;bottom:22%;width:48px;opacity:.55;background-image:radial-gradient(#b89455 1px,transparent 1px);background-size:6px 6px;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);pointer-events:none"></div>
+        <div style="position:relative;display:flex;align-items:center;gap:6px;padding-bottom:8px">
+          <span style="color:#14bda8;font-size:18px;line-height:1">❋</span>
+          <span style="font-family:Special Elite,monospace;font-size:11px;letter-spacing:.14em">EVENT 02</span>
+          <span style="flex:1;height:1px;border-top:1px dashed #14bda8;opacity:.55;margin:0 4px"></span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;background:#14bda8;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#f4ecdb;transform:rotate(45deg);border:1px solid #14bda8"></span><span style="width:7px;height:7px;background:#ba125a;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#14bda8;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#f4ecdb;transform:rotate(45deg);border:1px solid #ba125a"></span><span style="width:7px;height:7px;background:#ba125a;transform:rotate(45deg)"></span><span style="width:7px;height:7px;background:#14bda8;transform:rotate(45deg)"></span></span>
+          <span style="flex:1;height:1px;border-top:1px dashed #14bda8;opacity:.55;margin:0 4px"></span>
           <div style="width:26px;height:26px;border:1.4px solid #0a0a0f;display:grid;place-items:center;font-family:Inter,sans-serif;font-weight:700;font-size:16px;line-height:1">×</div>
         </div>
         <div style="position:relative;display:grid;grid-template-columns:1.25fr 0.85fr;gap:12px;align-items:start">
-          <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;align-items:flex-start;gap:6px">
-              <div style="font-family:Anton,sans-serif;font-size:clamp(36px,3.2vw,48px);line-height:.86;letter-spacing:-.02em;text-transform:uppercase">EVENT<br/>NAME</div>
-              <div style="margin-top:4px;width:54px;height:30px;border:1.2px solid #0a0a0f;border-radius:50%;display:grid;place-items:center;font-family:Caveat,cursive;font-weight:600;font-size:18px;transform:rotate(-6deg)">02</div>
+              <div style="font-family:Anton,sans-serif;font-size:clamp(38px,3.3vw,50px);line-height:.84;letter-spacing:-.03em;text-transform:uppercase">EVENT<br/>NAME</div>
+              <div style="margin-top:2px;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:56px;height:30px;border:1.6px solid #14bda8;border-radius:50%;display:grid;place-items:center;font-family:Caveat,cursive;font-weight:600;font-size:18px;transform:rotate(-5deg);color:#0a0a0f">02</div>
+                <div style="width:34px;height:10px;opacity:.7;background-image:radial-gradient(#ba125a 1.2px,transparent 1.2px);background-size:7px 7px;transform:rotate(-4deg)"></div>
+              </div>
             </div>
-            <div style="align-self:flex-start;background:#14bda8;color:#0a0a0f;padding:5px 10px;font-family:Special Elite,monospace;font-size:10px;letter-spacing:.12em;transform:rotate(-0.6deg)">TAGLINE GOES HERE</div>
-            <div style="display:flex;flex-direction:column;margin-top:4px">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>DATE</span><span>→</span><span>DD MMM YYYY</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>TIME</span><span>→</span><span>00:00 AM / PM</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>VENUE</span><span>→</span><span>VENUE NAME</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(10,10,15,.22);font-family:Special Elite,monospace;font-size:9px;letter-spacing:.08em"><span>TYPE</span><span>→</span><span>WORKSHOP / TALK</span></div>
+            <div style="position:relative;align-self:flex-start;background:#14bda8;color:#0a0a0f;padding:6px 10px 6px;font-family:Special Elite,monospace;font-size:10px;letter-spacing:.12em;transform:rotate(-0.6deg);margin-left:2px">
+              <div style="position:absolute;left:0;right:0;top:-4px;height:4px;background:repeating-linear-gradient(90deg,#14bda8 0 4px,#ed990f 4px 8px,#ba125a 8px 12px,#f4ecdb 12px 14px);opacity:.9"></div>
+              TAGLINE GOES HERE
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;color:#14bda8;font-size:9px;margin-top:2px;opacity:.9"><span style="font-size:11px">↷</span><span style="width:18px;height:1px;background:none;border-top:1px solid #14bda8;opacity:.4"></span></div>
+            <div style="display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #c94a2e;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;border:1px solid #ba125a;border-radius:2px;color:#ba125a;font-size:8px">▦</span><span>DATE</span><span style="margin-left:auto">→</span><span>DD MMM YYYY</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #ed990f;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;border:1px solid #ed990f;border-radius:50%;color:#ed990f;font-size:9px">◷</span><span>TIME</span><span style="margin-left:auto">→</span><span>00:00 AM / PM</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #14bda8;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;color:#14bda8;font-size:11px">📍</span><span>VENUE</span><span style="margin-left:auto">→</span><span>VENUE NAME</span></div>
+              <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dotted #463454;font-family:Special Elite,monospace;font-size:8.5px;letter-spacing:.06em"><span style="width:14px;height:14px;display:grid;place-items:center;color:#463454;font-size:10px">🎙</span><span>TYPE</span><span style="margin-left:auto">→</span><span>WORKSHOP / TALK</span></div>
             </div>
           </div>
           <div style="position:relative;height:100%;min-height:214px;background:#0a0a0f;border:1px solid rgba(10,10,15,.15);overflow:hidden;clip-path:polygon(0 3%,3% 0,97% 0,100% 2%,100% 97%,98% 100%,2% 100%,0 98%);transform:rotate(-0.4deg)">
-            <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,rgba(20,189,168,.08) 0 1px,transparent 1px 10px),linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,0));color:#9a9aa5;font-family:Rajdhani,sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;text-align:center;padding:12px">IMAGE<br/>PLACEHOLDER</div>
+            <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,rgba(20,189,168,.08) 0 1px,transparent 1px 10px),linear-gradient(rgba(255,255,255,.03),rgba(255,255,255,0));color:#9a9aa5;font-family:Rajdhani,sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;text-align:center;padding:12px">IMAGE<br/>PLACEHOLDER</div>
             <div style="position:absolute;top:8px;right:8px;background:#f4ecdb;color:#0a0a0f;padding:6px 8px;font-family:Special Elite,monospace;font-size:8px;line-height:1.2;letter-spacing:.08em;box-shadow:1px 2px 0 rgba(0,0,0,.2);transform:rotate(2deg);border-left:3px solid #14bda8">INDIE TECH<br/>REAL IMPACT</div>
+            <div style="position:absolute;right:2px;top:28px;bottom:22px;width:14px;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.95"><span style="font-size:10px">🌼</span><span style="flex:1;width:2px;background:linear-gradient(#14bda8,#14bda8);opacity:.5"></span><span style="width:6px;height:6px;border-radius:50%;background:#ba125a"></span><span style="flex:1;width:2px;background:linear-gradient(#14bda8,#14bda8);opacity:.5"></span><span style="font-size:10px">🌼</span></div>
             <div style="position:absolute;right:8px;bottom:8px;width:42px;height:42px;border:1px solid rgba(245,245,247,.7);display:grid;place-items:center;color:#f5f5f7;opacity:.85">
               <div style="width:22px;height:22px;border:1px solid #f5f5f7;border-radius:50%;display:grid;place-items:center"><div style="width:10px;height:10px;border:1px solid #f5f5f7;border-radius:50%"></div></div>
             </div>
           </div>
         </div>
-        <div style="position:relative;display:grid;grid-template-columns:1.15fr 0.85fr;gap:12px;align-items:end;margin-top:14px">
-          <div style="position:relative;border:1px dashed rgba(10,10,15,.45);padding:10px 12px 10px;display:flex;flex-direction:column;gap:2px">
-            <span style="position:absolute;left:-4px;top:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px;line-height:1">+</span><span style="position:absolute;right:-4px;top:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span><span style="position:absolute;left:-4px;bottom:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span><span style="position:absolute;right:-4px;bottom:-4px;width:8px;height:8px;display:grid;place-items:center;font-size:10px">+</span>
-            <div style="font-family:Special Elite,monospace;font-size:9px;letter-spacing:.14em;opacity:.7">LIMITED SEATS</div>
-            <div style="display:flex;align-items:center;gap:8px;font-family:Anton,sans-serif;font-size:16px;letter-spacing:.04em">REGISTER NOW <span style="font-family:Inter,sans-serif;font-weight:300">→</span></div>
-            <div style="height:2px;background:#14bda8;opacity:.9;width:88%;margin-top:1px;transform:rotate(-0.4deg)"></div>
+        <div style="position:relative;display:grid;grid-template-columns:1.15fr 0.85fr;gap:12px;align-items:end;margin-top:12px">
+          <div style="position:relative;border:1px dashed #14bda8;padding:11px 12px 10px;display:flex;flex-direction:column;gap:2px;background:rgba(244,236,219,.45)">
+            <span style="position:absolute;left:4px;top:4px;color:#14bda8;font-size:10px">❧</span><span style="position:absolute;right:4px;top:4px;color:#14bda8;font-size:7px">◆</span><span style="position:absolute;left:4px;bottom:4px;color:#14bda8;font-size:10px">❧</span><span style="position:absolute;right:4px;bottom:4px;color:#14bda8;font-size:10px">❧</span>
+            <div style="font-family:Special Elite,monospace;font-size:9px;letter-spacing:.14em;opacity:.7;text-align:center">LIMITED SEATS</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-family:Anton,sans-serif;font-size:15px;letter-spacing:.04em">REGISTER NOW <span style="font-family:Inter,sans-serif;font-weight:300">→</span></div>
+            <div style="height:3px;background:repeating-linear-gradient(90deg,#14bda8 0 14px,transparent 14px 16px);opacity:.85;width:76%;margin:2px auto 0;transform:rotate(-0.4deg)"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px">
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;position:relative">
             <span style="font-size:18px;line-height:1">←</span>
-            <span style="font-family:Caveat,cursive;font-size:13px;line-height:1.15;opacity:.85">bring your<br/>ideas. leave<br/>with more.</span>
-            <span style="margin-left:auto;writing-mode:vertical-rl;font-family:Special Elite,monospace;font-size:8px;letter-spacing:.18em;opacity:.5">PRAYAS 2026</span>
+            <span style="font-family:Caveat,cursive;font-size:12px;line-height:1.15;opacity:.85">bring your<br/>ideas. leave<br/>with more.</span>
+            <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="width:46px;height:46px;border-radius:50% 40% 46% 38%;background:radial-gradient(circle at 30% 30%,#14bda8,#1a0b2e 68%);border:2px solid #0a0a0f;display:grid;place-items:center;font-size:16px;color:#f4ecdb">🪷</div>
+              <span style="writing-mode:vertical-rl;font-family:Special Elite,monospace;font-size:7px;letter-spacing:.16em;opacity:.55">PRAYAS 2026</span>
+            </div>
           </div>
         </div>
-        <div style="position:relative;margin-top:12px;height:1px;border-top:1px dashed rgba(10,10,15,.2)"></div>
+        <div style="position:relative;margin-top:10px;height:6px;background:repeating-linear-gradient(90deg,#14bda8 0 6px,#ba125a 6px 10px,#ed990f 10px 14px,#0a0a0f 14px 16px);opacity:.7;mask-image:linear-gradient(to right,#000 92%,transparent);-webkit-mask-image:linear-gradient(to right,#000 92%,transparent)"></div>
       </div>
     </div>
 
