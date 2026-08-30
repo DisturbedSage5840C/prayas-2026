@@ -10,7 +10,7 @@
 <helmet data-dc-atomics>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Marcellus&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Marcellus&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 html{background:#0a0a0f}
 body{margin:0;background:#0a0a0f;color:#f5f5f7;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -226,69 +226,74 @@ a:hover{color:#ed990f}
   </div>
 </div>
 
-<section data-screen-label="Hackathon" style="position:relative;z-index:1;padding:12vh 6vw 12vh;overflow-x:clip">
-  <div style="position:absolute;left:50%;top:-30vh;width:74vw;height:74vw;transform:translateX(-50%);filter:blur(80px);opacity:{{ hackGlow }};background:radial-gradient(circle at 50% 50%,rgba(255,46,159,.4),rgba(70,52,84,.28) 46%,rgba(10,10,15,0) 72%);pointer-events:none"></div>
-  <div style="position:absolute;left:50%;top:-6vh;width:1px;height:18vh;transform:translateX(-50%);background:linear-gradient(rgba(255,46,159,0),rgba(255,46,159,.5),rgba(255,46,159,0));pointer-events:none"></div>
+<section data-screen-label="Hackathon" style="position:relative;z-index:1;background:#0b0f26;padding:10vh 4vw 6vh;overflow:clip">
+  <div style="position:absolute;left:50%;top:-20vh;width:80vw;height:80vw;transform:translateX(-50%);filter:blur(90px);opacity:{{ hackGlow }};background:radial-gradient(circle at 50% 50%,rgba(255,46,159,.18),rgba(10,14,36,0) 70%);pointer-events:none"></div>
 
-  <div style="position:relative;display:flex;flex-direction:column;gap:58px;max-width:1180px;margin:0 auto">
-    <div style="display:flex;flex-direction:column;gap:18px;opacity:{{ hackIn }};transform:translateY({{ hackY }})">
-      <div style="display:flex;align-items:center;gap:16px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.3em;color:#ed990f">
-        <span>EVENT 03 &nbsp;/&nbsp; THE FINALE</span><span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(237,153,15,.4),rgba(237,153,15,0))"></span>
-      </div>
-      <div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(42px,7.4vw,116px);line-height:.94;letter-spacing:-.02em;color:#f5f5f7;text-shadow:0 0 30px rgba(255,46,159,.4)">THE<br>HACKATHON</div>
-      <div style="font-family:Marcellus,serif;font-size:clamp(16px,1.7vw,24px);line-height:1.55;max-width:660px;color:#ebfeff;text-wrap:pretty">36 hours, one campus, eight directions to build in. Placeholder copy &mdash; final blurb TBC.</div>
-    </div>
+  <div style="position:relative;max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:56px;opacity:{{ hackIn }};transform:translateY({{ hackY }})">
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:22px">
-      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
-        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">WHEN</div>
-        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">TBC</div>
-        <div style="height:8px;width:70%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
-        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">DURATION</div>
-        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">36 HRS</div>
-        <div style="height:8px;width:56%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
-        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">PRIZE POOL</div>
-        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">TBC</div>
-        <div style="height:8px;width:64%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid rgba(245,245,247,.12);border-radius:6px;background:rgba(13,14,33,.5)">
-        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;color:#9a9aa5">TEAM SIZE</div>
-        <div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:24px;color:#ff2e9f">2&ndash;4</div>
-        <div style="height:8px;width:44%;border-radius:2px;background:rgba(245,245,247,.12)"></div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start">
-      <div style="display:flex;flex-direction:column;gap:20px">
-        <div style="font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.26em;color:#9a9aa5">TRACKS &mdash; ONE PER ARM</div>
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ff2e9f">01</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ed990f">02</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#14bda8">03</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ebfeff">04</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#ba125a">05</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px dashed rgba(255,46,159,.24);border-radius:4px"><span style="font-family:Orbitron,sans-serif;font-weight:700;font-size:11px;color:#463454">06</span><span style="height:8px;flex:1;border-radius:2px;background:rgba(245,245,247,.12)"></span></div>
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:40px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:11px;letter-spacing:.32em;color:#d50054">EVENT 03 / THE FINALE</div>
+        <div style="font-family:Anton,sans-serif;font-weight:400;line-height:.88;letter-spacing:.01em;text-transform:uppercase">
+          <div style="font-size:clamp(56px,9vw,132px);color:#d50054;-webkit-text-stroke:1px rgba(0,0,0,.35);text-shadow:4px 3px 0 #ed990f, 7px 5px 0 rgba(0,0,0,.28);transform:skewX(-1deg) rotate(-0.6deg)">THE</div>
+          <div style="font-size:clamp(56px,9vw,132px);color:#d50054;-webkit-text-stroke:1px rgba(0,0,0,.35);text-shadow:4px 3px 0 #ed990f, 7px 5px 0 rgba(0,0,0,.28);transform:skewX(-1deg) rotate(-0.6deg);margin-top:-6px">HACKATHON</div>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:16px;padding:28px;border:1px solid rgba(255,46,159,.24);border-radius:6px;background:rgba(70,52,84,.2)">
-        <div style="font-family:Orbitron,sans-serif;font-weight:800;font-size:26px;line-height:1.1;color:#f5f5f7">Applications<br>open soon</div>
-        <div style="display:flex;flex-direction:column;gap:7px">
-          <div style="height:9px;border-radius:2px;background:rgba(245,245,247,.13)"></div>
-          <div style="height:9px;width:72%;border-radius:2px;background:rgba(245,245,247,.13)"></div>
+      <div style="padding-top:18px;display:flex;flex-direction:column;border-left:1px solid rgba(245,245,247,.08);padding-left:24px;gap:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px dashed rgba(245,245,247,.14);font-family:Rajdhani,sans-serif">
+          <span style="font-weight:600;font-size:11px;letter-spacing:.22em;color:#8b8da3">WHEN</span>
+          <span style="font-weight:700;font-size:14px;letter-spacing:.14em;color:#f5f5f7">TBC</span>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;padding:15px;border-radius:4px;background:#ff2e9f;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;letter-spacing:.2em;color:#0a0a0f;box-shadow:0 0 24px rgba(255,46,159,.35),0 0 4px rgba(255,46,159,.6)">JOIN THE HACK</div>
-        <div style="font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:.06em;color:#9a9aa5">form link TBC</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px dashed rgba(245,245,247,.14);font-family:Rajdhani,sans-serif">
+          <span style="font-weight:600;font-size:11px;letter-spacing:.22em;color:#8b8da3">DURATION</span>
+          <span style="font-weight:700;font-size:14px;letter-spacing:.14em;color:#f5f5f7">36 HRS</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px dashed rgba(245,245,247,.14);font-family:Rajdhani,sans-serif">
+          <span style="font-weight:600;font-size:11px;letter-spacing:.22em;color:#8b8da3">PRIZE POOL</span>
+          <span style="font-weight:700;font-size:14px;letter-spacing:.14em;color:#f5f5f7">TBC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;font-family:Rajdhani,sans-serif">
+          <span style="font-weight:600;font-size:11px;letter-spacing:.22em;color:#8b8da3">TEAM SIZE</span>
+          <span style="font-weight:700;font-size:14px;letter-spacing:.14em;color:#f5f5f7">2–4</span>
+        </div>
       </div>
     </div>
 
-    <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;padding-top:34px;border-top:1px solid rgba(255,46,159,.16);font-family:Rajdhani,sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#9a9aa5">
-      <img src="assets/prayas-logo.svg" alt="Prayas" style="height:26px;width:auto;display:block;opacity:.85">
-      <span>INSTAGRAM &nbsp;/&nbsp; MAIL &nbsp;/&nbsp; SPONSOR DECK</span>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:11px;letter-spacing:.32em;color:#8b8da3">TRACKS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px 20px">
+        <div style="position:relative;overflow:hidden;padding:28px 24px 32px;border:1px solid rgba(245,245,247,.09);background:rgba(18,22,48,.72);transform:rotate(-0.5deg);min-height:118px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="position:absolute;right:-2px;top:-2px;width:42px;height:42px;border-left:1px solid rgba(245,245,247,.06);border-bottom:1px solid rgba(245,245,247,.06);transform:rotate(45deg) translate(14px,14px);opacity:.5"></div>
+          <div style="position:absolute;left:18px;top:10px;width:10px;height:10px;border-radius:50%;background:#d50054;opacity:.9"></div>
+          <div style="font-family:Anton,sans-serif;font-size:22px;line-height:1;color:#d50054;transform:rotate(-1deg)">01</div>
+          <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;color:#f5f5f7">Track Name</div>
+        </div>
+        <div style="position:relative;overflow:hidden;padding:28px 24px 32px;border:1px solid rgba(245,245,247,.09);background:rgba(18,22,48,.72);transform:rotate(0.35deg);min-height:118px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="position:absolute;right:-2px;top:-2px;width:42px;height:42px;border-left:1px solid rgba(245,245,247,.06);border-bottom:1px solid rgba(245,245,247,.06);transform:rotate(45deg) translate(14px,14px);opacity:.5"></div>
+          <div style="position:absolute;left:18px;top:10px;width:10px;height:10px;border-radius:50%;background:#ed990f;opacity:.9"></div>
+          <div style="font-family:Anton,sans-serif;font-size:22px;line-height:1;color:#ed990f;transform:rotate(-1deg)">02</div>
+          <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;color:#f5f5f7">Track Name</div>
+        </div>
+        <div style="position:relative;overflow:hidden;padding:28px 24px 32px;border:1px solid rgba(245,245,247,.09);background:rgba(18,22,48,.72);transform:rotate(0.4deg);min-height:118px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="position:absolute;right:-2px;top:-2px;width:42px;height:42px;border-left:1px solid rgba(245,245,247,.06);border-bottom:1px solid rgba(245,245,247,.06);transform:rotate(45deg) translate(14px,14px);opacity:.5"></div>
+          <div style="position:absolute;left:18px;top:10px;width:10px;height:10px;border-radius:50%;background:#14bda8;opacity:.9"></div>
+          <div style="font-family:Anton,sans-serif;font-size:22px;line-height:1;color:#14bda8;transform:rotate(-1deg)">03</div>
+          <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;color:#f5f5f7">Track Name</div>
+        </div>
+        <div style="position:relative;overflow:hidden;padding:28px 24px 32px;border:1px solid rgba(245,245,247,.09);background:rgba(18,22,48,.72);transform:rotate(-0.35deg);min-height:118px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="position:absolute;right:-2px;top:-2px;width:42px;height:42px;border-left:1px solid rgba(245,245,247,.06);border-bottom:1px solid rgba(245,245,247,.06);transform:rotate(45deg) translate(14px,14px);opacity:.5"></div>
+          <div style="position:absolute;left:18px;top:10px;width:10px;height:10px;border-radius:50%;background:#ed990f;opacity:.9"></div>
+          <div style="font-family:Anton,sans-serif;font-size:22px;line-height:1;color:#ed990f;transform:rotate(-1deg)">04</div>
+          <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:18px;letter-spacing:.02em;color:#f5f5f7">Track Name</div>
+        </div>
+      </div>
     </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:24px;padding-top:8px;flex-wrap:wrap">
+      <div style="font-family:Inter,sans-serif;font-size:13px;letter-spacing:.02em;color:#8b8da3">Applications open soon — form link TBC</div>
+      <a href="#" style="display:inline-flex;align-items:center;justify-content:center;padding:14px 36px;border:2px solid #d50054;border-radius:999px;font-family:Rajdhani,sans-serif;font-weight:800;font-size:13px;letter-spacing:.22em;color:#f5f5f7;background:transparent;box-shadow:0 0 0 1px rgba(213,0,84,.15) inset;transition:all .2s">JOIN THE HACK</a>
+    </div>
+
   </div>
 </section>
 
