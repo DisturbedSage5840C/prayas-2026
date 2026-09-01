@@ -18,7 +18,7 @@
 
 :root {
   /* -- brand palette ------------------------------------------------------ */
-  --ink:        #0d0e20;   /* deep navy — the one ground                     */
+  --ink:        #0a0a0e;   /* near-black — the one ground                    */
   --plum:       #433552;   /* violet — the one raised surface                */
   --crimson:    #aa295a;   /* rani pink — brand accent                       */
   --marigold:   #e19d39;   /* amber — structural accent                      */
@@ -27,12 +27,18 @@
   --ice:        #eefeff;   /* near-white — all body text                     */
 
   /* Derived steps, declared once so no component invents its own. */
-  --ink-raised:  #14162c;
-  --ink-sunk:    #090a18;
+  --ink-raised:  #121218;
+  --ink-sunk:    #060609;
   --plum-deep:   #2b2138;
   --plum-shade:  #221a2d;
   --marigold-lo: #c4832a;
   --marigold-hi: #f0bd72;
+  /* The ring runs hotter than the brand crimson so it holds against the
+     dancer's own pink. Still crimson's hue — it is not a second accent. */
+  --crimson-hot: #d8367a;
+  /* Mint is a light cool accent — it disappears on paper stock. This is the
+     same hue taken dark enough to read there. */
+  --mint-deep:   #2c6b5f;
 
   --ice-70: rgba(238, 254, 255, .70);
   --ice-55: rgba(238, 254, 255, .55);
@@ -74,10 +80,17 @@
      visible" state so content is readable with JS off or still loading. */
   --p: 0;  --rot: 0deg;
   --hero-o: 1;   --hero-y: 0px;
-  --dancer-o: 1; --dancer-y: 0px; --dancer-s: 1;
   --e1-o: 1;     --e1-x: 0px;
   --e2-o: 1;     --e2-x: 0px;
-  --lock-o: 1;   --cue-o: 1;  --glow-o: .5;
+  --cue-o: 1;  --glow-o: 0;
+  --ring-o: 1;   --ring-s: 1;
+  --lock-o: 0;
+  /* How far the dancer rises and shrinks as the closing line arrives.
+     Overridden per breakpoint — a short landscape stage needs much more. */
+  --lift-vh: -7vh;  --lift-k: .08;
+  /* Where the polar buta field radiates from — the engine keeps this on the
+     dancer so the field and the ring share one centre. */
+  --stage-x: 50%; --stage-y: 46%;
 }
 
 /* ============================================================================
@@ -147,58 +160,58 @@ a:hover { color: var(--marigold-hi); }
   background: var(--ink);
 }
 
+/* -- the buta field --------------------------------------------------------
+   The emblems are NOT a scattered wallpaper and never were a square lattice.
+   Measured off the reference they sit on a POLAR lattice centred on the
+   stage: rings ~108px apart, ~150px of arc between neighbours, and every
+   other ring offset by half a step so no two rings line up into spokes. Each
+   emblem is also tilted toward its own radius, which is what makes the field
+   read as radiating from the dancer rather than as tiling behind her.
+
+   That geometry cannot come out of a repeating background image, so the layer
+   is filled at boot by the engine (see buildWeave in js/prayas.js) and rebuilt
+   on resize. This block only styles what it produces. */
 .backdrop__weave {
   position: absolute;
   inset: 0;
-  background-image:
-    repeating-linear-gradient(45deg,  rgba(225, 157, 57, .030) 0 1px, transparent 1px 26px),
-    repeating-linear-gradient(-45deg, rgba(170, 41, 90, .030) 0 1px, transparent 1px 26px);
-}
-
-/* Two counter-rotating mandala rings. Deliberately faint — any stronger and
-   they read as a sunburst that fights everything sitting on top. */
-.backdrop__mandala {
-  position: absolute;
-  left: 50%;
-  top: 44%;
-  border-radius: 50%;
-  transform-origin: 50% 50%;
+  /* Turns with the act, an eighth as fast as everything else — enough to feel
+     alive over a 460vh scroll, slow enough never to read as spinning. */
+  transform: rotate(calc(var(--rot) * .12));
+  transform-origin: var(--stage-x, 50%) var(--stage-y, 46%);
   will-change: transform;
 }
-.backdrop__mandala--out {
-  width: 170vmax; height: 170vmax;
-  transform: translate(-50%, -50%) rotate(var(--rot));
-  background-image:
-    repeating-conic-gradient(from 0deg at 50% 50%, rgba(170, 41, 90, .05) 0deg 1.3deg, transparent 1.3deg 10deg),
-    repeating-radial-gradient(circle at 50% 50%, rgba(87, 187, 168, .04) 0 1px, transparent 1px 92px);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 5%, rgba(0,0,0,.4) 28%, transparent 52%);
-          mask-image: radial-gradient(circle at 50% 50%, #000 5%, rgba(0,0,0,.4) 28%, transparent 52%);
-}
-.backdrop__mandala--in {
-  width: 115vmax; height: 115vmax;
-  transform: translate(-50%, -50%) rotate(calc(var(--rot) * -1.6));
-  background-image:
-    repeating-conic-gradient(from 6deg at 50% 50%, rgba(225, 157, 57, .04) 0deg .8deg, transparent .8deg 24deg);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 12%, rgba(0,0,0,.6) 28%, transparent 48%);
-          mask-image: radial-gradient(circle at 50% 50%, transparent 12%, rgba(0,0,0,.6) 28%, transparent 48%);
+
+.buta {
+  position: absolute;
+  /* The engine sets --x/--y/--a/--w per emblem; everything else is here so a
+     hundred-odd nodes carry one shared rule rather than a style string each. */
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  aspect-ratio: 147 / 180;
+  transform: translate(-50%, -50%) rotate(var(--a));
+  background: url("../assets/bg-motif.webp") center / contain no-repeat;
+  opacity: var(--buta-o, .3);
 }
 
+/* Reserved for the burst — flat black at rest, exactly like the reference. */
 .backdrop__glow {
   position: absolute;
   inset: 0;
   opacity: var(--glow-o);
-  background:
-    radial-gradient(120% 80% at 50% -12%, rgba(67, 53, 82, .85), transparent 62%),
-    radial-gradient(90% 60% at 50% 112%, rgba(170, 41, 90, .26), transparent 60%);
-  transition: opacity .6s ease;
+  background: radial-gradient(58% 46% at 50% 50%, rgba(216, 54, 122, .22), transparent 68%);
 }
 
+/* Vertical hairlines, 4px apart. Off the reference: barely a value step above
+   the ground, but they stop a full-bleed black from looking like dead space. */
 .backdrop__grain {
   position: absolute;
   inset: 0;
-  opacity: .45;
-  background-image: radial-gradient(rgba(238, 254, 255, .08) 1px, transparent 1.3px);
-  background-size: 16px 16px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(225, 157, 57, .055) 0 1px,
+    transparent 1px 4px
+  );
 }
 
 main { position: relative; z-index: 1; }
@@ -209,10 +222,9 @@ main { position: relative; z-index: 1; }
 
 .act {
   position: relative;
-  /* Fallback only. The engine replaces this with a pixel height derived from
-     CONFIG.actSeconds (25s of steady scrolling), so the act plays for the same
-     length of time regardless of viewport height. Retune it in js/prayas.js. */
-  height: 2100vh;
+  /* Fallback only. The engine replaces this with a pixel height computed from
+     CONFIG.actVh + CONFIG.holdVh; retune the pacing there, not here. */
+  height: 1180vh;
 }
 
 .act__stage {
@@ -222,9 +234,10 @@ main { position: relative; z-index: 1; }
   height: 100svh;
   overflow: clip;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   align-items: center;
-  padding: clamp(1.5rem, 4vh, 3rem) 0 clamp(4rem, 10vh, 7rem);
+  /* The top pad has to clear the hero's 10px rise, since the stage clips. */
+  padding: clamp(2rem, 5vh, 3rem) 0 clamp(2rem, 5vh, 3.5rem);
 }
 
 /* -- hero ------------------------------------------------------------------ */
@@ -252,7 +265,7 @@ main { position: relative; z-index: 1; }
 .hero__logo {
   width: min(38vw, 360px);
   height: auto;
-  filter: drop-shadow(0 0 46px rgba(170, 41, 90, .45));
+  filter: drop-shadow(0 0 30px rgba(170, 41, 90, .28));
   animation: float 7s ease-in-out infinite;
 }
 
@@ -270,29 +283,126 @@ main { position: relative; z-index: 1; }
 
 .dancer {
   grid-row: 2;
+  align-self: stretch;          /* the stage centres its rows; without this the
+                                   row collapses to content and the plate spills */
+  position: relative;
   min-height: 0;
   display: grid;
   place-items: center;
   padding: clamp(1rem, 3vh, 2rem) 0;
+
+  /* The plate and the ring move as one group. The only thing that drives this
+     is the closing beat: she rises and settles back a little so the line at
+     the bottom of the stage lands on clear ground instead of across her legs. */
+  transform:
+    translateY(calc(var(--lock-o) * var(--lift-vh)))
+    scale(calc(1 - var(--lock-o) * var(--lift-k)));
+  transform-origin: 50% 38%;
+  will-change: transform;
 }
 
-.dancer__plate {
-  height: 100%;
+/* -- the ring ---------------------------------------------------------------
+   A true circle, not an ellipse: two hairlines 9 units apart carrying thirty
+   beads that spell PRAYAS 2026 three times around, a pair of dots in every
+   gap. Sized off the row HEIGHT rather than the width so it keeps its
+   relationship to the figure — she is height-constrained by object-fit, and
+   so is this. */
+.ring {
+  position: absolute;
+  top: 2%;
+  left: 50%;
   width: auto;
-  max-width: 44vw;
+  height: 74%;
+  aspect-ratio: 1;
+  max-width: 88vw;
+  transform: translateX(-50%) rotate(calc(var(--rot) * -.18)) scale(var(--ring-s));
+  transform-origin: 50% 50%;
+  overflow: visible;
+  color: var(--crimson-hot);
+  filter: drop-shadow(0 0 5px rgba(216, 54, 122, .55));
+  animation: ring-in 1.5s .25s ease-out both;
+  will-change: transform;
+}
+
+@keyframes ring-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* --ring-o lands on stroke/fill opacity, not opacity: the load animation above
+   owns opacity, and an animation always wins over a plain declaration. */
+.ring__band {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-opacity: calc(var(--ring-o) * .8);
+}
+
+.ring__beads rect {
+  fill: var(--ink-sunk);
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-opacity: var(--ring-o);
+}
+
+/* The letters are ~7px on screen. They are not meant to be read at a glance —
+   at size they are texture, and only reward someone who leans in. */
+.ring__beads text {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-anchor: middle;
+  fill: currentColor;
+  fill-opacity: calc(var(--ring-o) * .85);
+}
+
+.ring__dots {
+  fill: currentColor;
+  fill-opacity: calc(var(--ring-o) * .6);
+}
+
+/* Absolutely filling the row is the only sizing that cannot overflow it.
+   With width:auto the box was sized by max-width and the poster's aspect
+   ratio, so the percentage height never constrained anything and she spilled
+   over the closing line below. object-fit letterboxes her inside the box
+   instead — the actual rendered size still follows the video's own aspect
+   ratio, so this is a generous ceiling, not a forced size. */
+.dancer__plate {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  width: min(100%, 50vw);
+  height: 88%;
   object-fit: contain;
-  opacity: var(--dancer-o);
-  transform: translateY(var(--dancer-y)) scale(var(--dancer-s));
+  transform: translateX(-50%);
   filter: url(#dancerKey) drop-shadow(0 0 18px rgba(170, 41, 90, .28));
+  /* Her entrance belongs to page load, not to scroll: the reference has her
+     on screen at the very top of the act, alongside the scroll cue. Tying it
+     to progress instead meant an empty stage until you had already scrolled. */
+  animation: plate-in 1.2s .1s cubic-bezier(.2, .7, .25, 1) both;
   will-change: opacity, transform;
+}
+
+@keyframes plate-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(26px) scale(.95); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1);   }
 }
 
 /* -- lockline + cue -------------------------------------------------------- */
 
+/* The closing line of the pinned act. Both cards are gone by 80% and the
+   burst has peaked, so this fades up over an otherwise empty stage — the
+   dancer standing, one line of type beneath her. It sits low enough to clear
+   her feet, and the act holds for another 45vh after it lands so it is not
+   scrolled off the instant it arrives. */
 .lockline {
-  grid-row: 3;
-  justify-self: center;
-  max-width: 34ch;
+  position: absolute;
+  left: 0; right: 0;
+  bottom: clamp(4rem, 9vh, 7rem);
+  z-index: 2;
+  max-width: 40ch;
+  margin: 0 auto;
   padding: 0 6vw;
   text-align: center;
   text-wrap: pretty;
@@ -349,7 +459,21 @@ main { position: relative; z-index: 1; }
 .card--one { left: 4vw;  --card-o: var(--e1-o); --card-x: var(--e1-x); --accent: var(--crimson); }
 .card--two { right: 4vw; --card-o: var(--e2-o); --card-x: var(--e2-x); --accent: var(--brick); }
 
-.card__frame {
+/* -- the ornamental plate ---------------------------------------------------
+   Every surface on this page that reads as printed stock uses this one rule:
+   the two event cards and the boxes in the hackathon section. The border is
+   an illustrated Pattachitra frame applied with border-image, so the four
+   corners stay pristine (border-image never stretches a corner) while the
+   vine tiles along the edges.
+
+   --band is the only thing that varies. The source plate is 139px of border
+   on 956px of artwork — 14.5% — so a small box needs a proportionally thinner
+   band, otherwise the vine eats the content. Each component sets its own. */
+.card__frame,
+.panel,
+.track,
+.mentor {
+  position: relative;
   border-style: solid;
   border-image-source: url("../assets/card-frame.webp");
   /* source slices in source pixels: top right bottom left */
@@ -357,13 +481,17 @@ main { position: relative; z-index: 1; }
   border-image-repeat: round;
   border-width: calc(var(--band) * 1.21) var(--band) calc(var(--band) * 1.07) var(--band);
 
-  position: relative;
   background-color: var(--paper);
   /* faint press texture so the interior is stock, not flat fill */
   background-image: radial-gradient(rgba(132, 38, 24, .07) 1px, transparent 1.2px);
   background-size: 9px 9px;
-  box-shadow: 0 20px 44px rgba(9, 10, 24, .62);
+  color: var(--on-paper);
+  box-shadow: 0 10px 26px rgba(6, 6, 9, .5);
 }
+
+/* The cards are the largest plates and sit over the pinned stage, so they
+   carry a deeper shadow than the boxes further down the page. */
+.card__frame { box-shadow: 0 20px 44px rgba(6, 6, 9, .62); }
 
 .card__body {
   position: relative;
@@ -487,18 +615,88 @@ main { position: relative; z-index: 1; }
 .hack {
   position: relative;
   z-index: 1;
-  background: linear-gradient(180deg, var(--ink) 0%, var(--ink-raised) 20%, var(--ink-raised) 80%, var(--ink) 100%);
+  /* Mostly transparent so the buta field carries on behind this section — an
+     opaque panel cut a hard horizontal seam across the field right where the
+     act ended. The tint is only enough to lift the section off the ground. */
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(18, 18, 24, .82) 14%,
+    rgba(18, 18, 24, .82) 86%,
+    transparent 100%);
   padding: var(--gap-2xl) 0;
   border-top: 1px solid var(--line);
 }
 
 .hack__inner {
+  position: relative;
+  z-index: 1;                 /* above the pointer glow */
   width: var(--shell);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--gap-xl);
 }
+
+/* -- pointer glow -----------------------------------------------------------
+   A soft marigold light that follows the cursor across the section. The
+   engine writes --mx / --my in px (rAF-throttled, one write per frame) and
+   this translates a fixed circle to them — cheaper than repainting a
+   viewport-sized gradient on every move, and it stays on the compositor.
+
+   The wrapper clips, so the light never spills past the section edges. */
+.hack__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.hack:hover .hack__glow { opacity: 1; }
+
+.hack__glow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 460px;
+  height: 460px;
+  margin: -230px 0 0 -230px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(225, 157, 57, .15),
+    rgba(225, 157, 57, .05) 42%,
+    transparent 70%);
+  transform: translate3d(var(--mx, 50%), var(--my, 50%), 0);
+  will-change: transform;
+}
+
+/* A pointer that cannot hover has nothing to follow, and reduced motion does
+   not want a light chasing it either. */
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .hack__glow { display: none; }
+}
+
+/* -- corner ornaments ------------------------------------------------------- */
+
+.corner {
+  position: absolute;
+  width: clamp(38px, 4.4vw, 70px);
+  height: auto;
+  aspect-ratio: 1;
+  color: var(--marigold);
+  opacity: .5;
+  filter: drop-shadow(0 0 7px rgba(225, 157, 57, .3));
+  pointer-events: none;
+}
+
+/* The ornament is authored for the top-left; the other three are the same
+   drawing turned a quarter at a time. */
+.corner--tl { top: calc(var(--gap-l) * -1); left: calc(var(--gap-m) * -1); }
+.corner--tr { top: calc(var(--gap-l) * -1); right: calc(var(--gap-m) * -1); transform: rotate(90deg); }
+.corner--br { bottom: calc(var(--gap-l) * -1); right: calc(var(--gap-m) * -1); transform: rotate(180deg); }
+.corner--bl { bottom: calc(var(--gap-l) * -1); left: calc(var(--gap-m) * -1); transform: rotate(270deg); }
 
 .hack__head {
   display: grid;
@@ -574,74 +772,69 @@ main { position: relative; z-index: 1; }
 .grid--four  { grid-template-columns: repeat(4, 1fr); }
 
 .panel {
-  position: relative;
-  padding: var(--gap-m);
-  background: var(--plum-shade);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
+  --band: clamp(15px, 1.9vw, 26px);
+  /* The band already insets the content; this is only the breathing room
+     between the vine and the type. */
+  padding: clamp(.5rem, 1.3vw, 1rem) clamp(.7rem, 1.6vw, 1.2rem);
 }
-.panel::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(var(--marigold), transparent);
-}
-.panel__n { font-family: var(--font-display); font-size: 1.5rem; line-height: 1; color: var(--marigold); }
+.panel__n { font-family: var(--font-display); font-size: 1.5rem; line-height: 1; color: var(--brick); }
 .panel__title {
   margin-top: .35rem;
   font-family: var(--font-body);
   font-size: var(--t-h4);
   font-weight: 600;
   letter-spacing: .04em;
-  color: var(--ice);
+  color: var(--on-paper);
 }
-.panel__text { margin-top: .5rem; font-size: var(--t-small); color: var(--ice-70); text-wrap: pretty; }
+.panel__text { margin-top: .5rem; font-size: var(--t-small); color: var(--on-paper-2); text-wrap: pretty; }
 
 /* -- tracks: genuinely sealed until day one -------------------------------- */
 
 .track {
+  --band: clamp(12px, 1.4vw, 19px);
   display: flex;
   flex-direction: column;
-  gap: .7rem;
-  padding: var(--gap-m);
-  background: var(--plum-shade);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  gap: .55rem;
+  padding: clamp(.5rem, 1.3vw, 1rem) clamp(.7rem, 1.6vw, 1.1rem);
 }
-.track__n { font-family: var(--font-display); font-size: 1.35rem; line-height: 1; color: var(--marigold); }
+.track__n { font-family: var(--font-display); font-size: 1.35rem; line-height: 1; color: var(--brick); }
+/* A redaction bar struck across the stock, rather than a lit panel — the
+   sealed state has to read as something withheld from a printed plate. */
 .track__plate {
   align-self: flex-start;
   max-width: 100%;
-  padding: .35rem .6rem;
-  background: var(--ink-sunk);
-  border: 1px solid rgba(87, 187, 168, .3);
+  padding: .3rem .55rem;
+  background: var(--on-paper);
   border-radius: 2px;
   overflow: hidden;
   font-size: .7rem;
   letter-spacing: .15em;
   line-height: 1.2;
-  color: var(--ice-38);
+  color: rgba(249, 246, 231, .34);
 }
 .track__state {
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: .22em;
   text-transform: uppercase;
-  color: var(--mint);
+  color: var(--mint-deep);
 }
 
-.mentor { padding-left: var(--gap-s); border-left: 2px solid var(--crimson); }
+.mentor {
+  /* The shortest plates on the page — two lines of type. A band sized like
+     the others would take nearly half their height, so these run thinner. */
+  --band: clamp(10px, 1.15vw, 16px);
+  padding: clamp(.7rem, 1.5vw, 1.1rem) clamp(.8rem, 1.7vw, 1.3rem);
+}
 .mentor h4 {
   font-family: var(--font-body);
   font-size: var(--t-small);
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--ice);
+  color: var(--on-paper);
 }
-.mentor p { margin-top: .3rem; font-size: var(--t-small); color: var(--ice-55); }
+.mentor p { margin-top: .3rem; font-size: var(--t-small); color: var(--on-paper-2); }
 
 .hack__cta {
   display: flex;
@@ -658,7 +851,7 @@ main { position: relative; z-index: 1; }
    Footer
    ========================================================================= */
 
-.foot { position: relative; z-index: 1; padding: var(--gap-xl) 0; border-top: 1px solid var(--line); background: var(--ink); }
+.foot { position: relative; z-index: 1; padding: var(--gap-xl) 0; border-top: 1px solid var(--line); }
 .foot__inner {
   width: var(--shell);
   margin: 0 auto;
@@ -711,9 +904,20 @@ main { position: relative; z-index: 1; }
   .card { --band: clamp(17px, 6.4vw, 34px); }
 
   .hero__logo { width: min(58vw, 300px); }
-  .dancer__plate { max-width: 66vw; }
+  .dancer__plate { width: min(100%, 78vw); }
+  .ring { height: 48%; }
+  .lockline { bottom: clamp(3rem, 7vh, 5rem); font-size: clamp(1rem, 4vw, 1.3rem); }
 
   .grid--two, .grid--four { grid-template-columns: 1fr; }
+
+  /* The shell is 92vw here, so the desktop inset would hang the ornaments off
+     the side of the screen. Pull them in and size them down to match. */
+  .corner { width: clamp(28px, 9vw, 44px); }
+  .corner--tl, .corner--bl { left: calc(var(--gap-xs) * -1); }
+  .corner--tr, .corner--br { right: calc(var(--gap-xs) * -1); }
+  .corner--tl, .corner--tr { top: calc(var(--gap-m) * -1); }
+  .corner--bl, .corner--br { bottom: calc(var(--gap-m) * -1); }
+
   .hack__cta { flex-direction: column; align-items: flex-start; }
   .foot__inner { flex-direction: column; align-items: flex-start; gap: var(--gap-xs); }
 }
@@ -723,11 +927,38 @@ main { position: relative; z-index: 1; }
   .rounds__desc { display: none; }
 }
 
-/* Landscape phones — the arch would otherwise overflow the short viewport. */
+/* Landscape phones and short laptops. There is only ~330px of interior once
+   the ornament band is drawn, so the plate has to lose the parts that are
+   nice-to-have — the rounds and the hook — and tighten what is left. Without
+   this the card simply runs off the top and bottom of the stage. */
 @media (max-height: 620px) and (min-width: 761px) {
-  .card { width: min(26vw, 300px); }
-  .card { --band: clamp(18px, 2.4vw, 34px); }
-  .rounds { display: none; }
+  .card {
+    width: min(26vw, 300px);
+    --band: clamp(16px, 2.2vw, 30px);
+  }
+  .rounds,
+  .card__hook { display: none; }
+  .card__body { gap: clamp(.2rem, .8vh, .4rem); }
+  .card__title { font-size: clamp(1.2rem, 2vw, 1.6rem); }
+  .meta__row { padding: clamp(.1rem, .4vh, .22rem) 0; }
+  .card .btn { padding: .5rem 1.1rem; }
+
+  /* The stage is barely taller than the figure here, so the closing beat has
+     to move her much further out of the line's way than it does on desktop. */
+  :root {
+    --lift-vh: -15vh;
+    --lift-k: .3;
+  }
+
+  /* The ring would otherwise be taller than the stage on a 390px viewport. */
+  .ring { height: 66%; }
+  .lockline { bottom: clamp(1.5rem, 6vh, 3rem); font-size: clamp(.95rem, 2.6vw, 1.25rem); }
+}
+
+/* Very short viewports keep only the essentials on the plate. */
+@media (max-height: 460px) and (min-width: 761px) {
+  .card__kicker { display: none; }
+  .meta__row:nth-child(3) { display: none; }   /* Teams — the least load-bearing */
 }
 
 /* ============================================================================
@@ -751,10 +982,20 @@ main { position: relative; z-index: 1; }
     transform: none;
     opacity: 1;
   }
-  .hero, .dancer__plate, .lockline { opacity: 1; transform: none; }
+  .hero, .lockline { opacity: 1; transform: none; }
+  /* Not transform:none — the plate is left:50% and owes its centring to the
+     translate, so clearing it would shove her off to the right. */
+  .dancer__plate { opacity: 1; transform: translateX(-50%); animation: none; }
+  .lockline {
+    position: static;
+    max-width: 34ch;
+    margin: 0 auto;
+    padding: var(--gap-l) 0 0;
+    opacity: 1;
+  }
+  .ring { display: none; }
   .cue { display: none; }
   .hero__logo { animation: none; }
-  .backdrop__mandala { transform: translate(-50%, -50%); }
   .btn, .btn__arrow { transition: none; }
 }
 
@@ -777,5 +1018,21 @@ html:not(.js) .card--two {
   margin: 0 auto;
   transform: none;
   opacity: 1;
+}
+html:not(.js) .lockline {
+  position: static;
+  max-width: 34ch;
+  margin: 0 auto;
+  padding: var(--gap-l) 0 0;
+  opacity: 1;
+}
+html:not(.js) .ring { display: none; }
+/* The polar field is built by the engine, so without it the ground would be
+   bare black. Fall back to the pre-baked scatter tile — not the same layout,
+   but the same texture, and it costs one request. */
+html:not(.js) .backdrop__weave {
+  background: url("../assets/bg-scatter.webp") repeat;
+  background-size: clamp(430px, 34vw, 560px) auto;
+  opacity: .3;
 }
 html:not(.js) .cue { display: none; }
