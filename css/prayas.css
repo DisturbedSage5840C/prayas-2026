@@ -1,0 +1,781 @@
+/* ============================================================================
+   Prayas '26 — Plaksha University
+   Theme: AI for good.
+
+   Palette is the Prayas brand palette, sampled from the brand board. Only the
+   arch card silhouette is borrowed from reference — none of the colour.
+
+   A uniform palette is about restraint in APPLICATION, not a smaller set of
+   colours. House rules, kept to throughout:
+     · ink is the only ground; plum is the only raised surface
+     · ice is the only body-text colour
+     · marigold carries structure — numerals, labels, the arch, CTAs
+     · crimson is the brand accent and belongs to Prayas itself
+     · mint is reserved for "sealed / technical" states, used sparingly
+     · brick appears only as a solid offset behind display type
+   Never more than two accents in one component.
+   ========================================================================= */
+
+:root {
+  /* -- brand palette ------------------------------------------------------ */
+  --ink:        #0d0e20;   /* deep navy — the one ground                     */
+  --plum:       #433552;   /* violet — the one raised surface                */
+  --crimson:    #aa295a;   /* rani pink — brand accent                       */
+  --marigold:   #e19d39;   /* amber — structural accent                      */
+  --brick:      #842618;   /* deep red — offsets only                        */
+  --mint:       #57bba8;   /* cool accent — sealed / technical states        */
+  --ice:        #eefeff;   /* near-white — all body text                     */
+
+  /* Derived steps, declared once so no component invents its own. */
+  --ink-raised:  #14162c;
+  --ink-sunk:    #090a18;
+  --plum-deep:   #2b2138;
+  --plum-shade:  #221a2d;
+  --marigold-lo: #c4832a;
+  --marigold-hi: #f0bd72;
+
+  --ice-70: rgba(238, 254, 255, .70);
+  --ice-55: rgba(238, 254, 255, .55);
+  --ice-38: rgba(238, 254, 255, .38);
+  --ice-22: rgba(238, 254, 255, .22);
+
+  --line: rgba(238, 254, 255, .13);
+
+  /* Card interior. The ornamental plate is printed on warm stock, so the
+     card reads as paper laid on the dark ground rather than a dark panel. */
+  --paper:       #f9f6e7;
+  --paper-shade: #efe8d2;
+  --on-paper:    #191428;
+  --on-paper-2:  #4a3f5c;
+
+  /* -- type --------------------------------------------------------------- */
+  --font-display: "Yatra One", Georgia, serif;
+  --font-body:    "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  --t-h2:    clamp(2.1rem, 6vw, 5rem);
+  --t-h4:    clamp(1.05rem, 1.5vw, 1.25rem);
+  --t-body:  clamp(.9rem, 1.05vw, 1rem);
+  --t-small: clamp(.78rem, .92vw, .86rem);
+  --t-label: clamp(.62rem, .78vw, .72rem);
+
+  /* -- rhythm ------------------------------------------------------------- */
+  --gap-xs: .5rem;
+  --gap-s:  .875rem;
+  --gap-m:  1.5rem;
+  --gap-l:  2.75rem;
+  --gap-xl: 5rem;
+  --gap-2xl: clamp(5rem, 12vh, 9rem);
+
+  --shell: min(1180px, 92vw);
+  --radius: 4px;
+
+  /* -- scroll-driven values ------------------------------------------------
+     The engine writes these once per frame. Defaults are the "everything
+     visible" state so content is readable with JS off or still loading. */
+  --p: 0;  --rot: 0deg;
+  --hero-o: 1;   --hero-y: 0px;
+  --dancer-o: 1; --dancer-y: 0px; --dancer-s: 1;
+  --e1-o: 1;     --e1-x: 0px;
+  --e2-o: 1;     --e2-x: 0px;
+  --lock-o: 1;   --cue-o: 1;  --glow-o: .5;
+}
+
+/* ============================================================================
+   Reset
+   ========================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--ink);
+  /* The engine does its own smoothing; native smooth scroll would fight it. */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--ice);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.06;
+}
+
+p, dl, dd, dt, ol, ul { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+img, svg, video { display: block; max-width: 100%; }
+
+a { color: var(--marigold); text-decoration: none; }
+a:hover { color: var(--marigold-hi); }
+
+:focus-visible { outline: 2px solid var(--marigold); outline-offset: 3px; border-radius: 2px; }
+
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.dot { color: var(--marigold); padding: 0 .35em; }
+
+.rule {
+  display: inline-block;
+  width: clamp(24px, 4vw, 46px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--marigold));
+  vertical-align: middle;
+}
+.hero__theme .rule:last-child,
+.hack__sub .rule:last-child { background: linear-gradient(90deg, var(--marigold), transparent); }
+
+/* ============================================================================
+   Backdrop
+   ========================================================================= */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.backdrop__weave {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg,  rgba(225, 157, 57, .030) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(-45deg, rgba(170, 41, 90, .030) 0 1px, transparent 1px 26px);
+}
+
+/* Two counter-rotating mandala rings. Deliberately faint — any stronger and
+   they read as a sunburst that fights everything sitting on top. */
+.backdrop__mandala {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.backdrop__mandala--out {
+  width: 170vmax; height: 170vmax;
+  transform: translate(-50%, -50%) rotate(var(--rot));
+  background-image:
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(170, 41, 90, .05) 0deg 1.3deg, transparent 1.3deg 10deg),
+    repeating-radial-gradient(circle at 50% 50%, rgba(87, 187, 168, .04) 0 1px, transparent 1px 92px);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 5%, rgba(0,0,0,.4) 28%, transparent 52%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 5%, rgba(0,0,0,.4) 28%, transparent 52%);
+}
+.backdrop__mandala--in {
+  width: 115vmax; height: 115vmax;
+  transform: translate(-50%, -50%) rotate(calc(var(--rot) * -1.6));
+  background-image:
+    repeating-conic-gradient(from 6deg at 50% 50%, rgba(225, 157, 57, .04) 0deg .8deg, transparent .8deg 24deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 12%, rgba(0,0,0,.6) 28%, transparent 48%);
+          mask-image: radial-gradient(circle at 50% 50%, transparent 12%, rgba(0,0,0,.6) 28%, transparent 48%);
+}
+
+.backdrop__glow {
+  position: absolute;
+  inset: 0;
+  opacity: var(--glow-o);
+  background:
+    radial-gradient(120% 80% at 50% -12%, rgba(67, 53, 82, .85), transparent 62%),
+    radial-gradient(90% 60% at 50% 112%, rgba(170, 41, 90, .26), transparent 60%);
+  transition: opacity .6s ease;
+}
+
+.backdrop__grain {
+  position: absolute;
+  inset: 0;
+  opacity: .45;
+  background-image: radial-gradient(rgba(238, 254, 255, .08) 1px, transparent 1.3px);
+  background-size: 16px 16px;
+}
+
+main { position: relative; z-index: 1; }
+
+/* ============================================================================
+   ACT ONE — tall track, sticky stage
+   ========================================================================= */
+
+.act {
+  position: relative;
+  /* Fallback only. The engine replaces this with a pixel height derived from
+     CONFIG.actSeconds (25s of steady scrolling), so the act plays for the same
+     length of time regardless of viewport height. Retune it in js/prayas.js. */
+  height: 2100vh;
+}
+
+.act__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  padding: clamp(1.5rem, 4vh, 3rem) 0 clamp(4rem, 10vh, 7rem);
+}
+
+/* -- hero ------------------------------------------------------------------ */
+
+.hero {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-s);
+  text-align: center;
+  opacity: var(--hero-o);
+  transform: translateY(var(--hero-y));
+  will-change: opacity, transform;
+}
+
+.hero__eyebrow {
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--ice-55);
+}
+
+.hero__logo {
+  width: min(38vw, 360px);
+  height: auto;
+  filter: drop-shadow(0 0 46px rgba(170, 41, 90, .45));
+  animation: float 7s ease-in-out infinite;
+}
+
+.hero__theme {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-s);
+  font-family: var(--font-display);
+  font-size: clamp(.95rem, 1.5vw, 1.35rem);
+  letter-spacing: .14em;
+  color: var(--marigold);
+}
+
+/* -- dancer ---------------------------------------------------------------- */
+
+.dancer {
+  grid-row: 2;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vh, 2rem) 0;
+}
+
+.dancer__plate {
+  height: 100%;
+  width: auto;
+  max-width: 44vw;
+  object-fit: contain;
+  opacity: var(--dancer-o);
+  transform: translateY(var(--dancer-y)) scale(var(--dancer-s));
+  filter: url(#dancerKey) drop-shadow(0 0 18px rgba(170, 41, 90, .28));
+  will-change: opacity, transform;
+}
+
+/* -- lockline + cue -------------------------------------------------------- */
+
+.lockline {
+  grid-row: 3;
+  justify-self: center;
+  max-width: 34ch;
+  padding: 0 6vw;
+  text-align: center;
+  text-wrap: pretty;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--ice);
+  opacity: var(--lock-o);
+  will-change: opacity;
+}
+
+.cue {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: clamp(1.2rem, 4vh, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  opacity: var(--cue-o);
+  animation: bob 2.4s ease-in-out infinite;
+}
+.cue__label {
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ice-38);
+}
+.cue__line { width: 1px; height: 34px; background: linear-gradient(var(--marigold), transparent); }
+
+/* ============================================================================
+   Event cards — the ornamental plate
+   ============================================================================
+   The border is an illustrated Pattachitra-style frame, recoloured into the
+   Prayas palette, applied with border-image: the four corners stay pristine
+   (border-image never stretches them) while the vine tiles along the edges.
+   Content sits on warm paper inside, so the card reads as a printed plate.
+   ========================================================================= */
+
+.card {
+  position: absolute;
+  top: 50%;
+  width: min(33vw, 440px);
+  transform: translateY(-50%) translateX(var(--card-x, 0px));
+  opacity: var(--card-o, 1);
+  will-change: opacity, transform;
+
+  /* Thickness of the ornament band. The source plate is 139px of border on a
+     956px-wide artwork — 14.5% — so keeping the rendered band near that ratio
+     is what stops the linework looking stretched. */
+  --band: clamp(24px, 3.4vw, 54px);
+}
+.card--one { left: 4vw;  --card-o: var(--e1-o); --card-x: var(--e1-x); --accent: var(--crimson); }
+.card--two { right: 4vw; --card-o: var(--e2-o); --card-x: var(--e2-x); --accent: var(--brick); }
+
+.card__frame {
+  border-style: solid;
+  border-image-source: url("../assets/card-frame.webp");
+  /* source slices in source pixels: top right bottom left */
+  border-image-slice: 168 139 148 139;
+  border-image-repeat: round;
+  border-width: calc(var(--band) * 1.21) var(--band) calc(var(--band) * 1.07) var(--band);
+
+  position: relative;
+  background-color: var(--paper);
+  /* faint press texture so the interior is stock, not flat fill */
+  background-image: radial-gradient(rgba(132, 38, 24, .07) 1px, transparent 1.2px);
+  background-size: 9px 9px;
+  box-shadow: 0 20px 44px rgba(9, 10, 24, .62);
+}
+
+.card__body {
+  position: relative;
+  z-index: 1;
+  padding: 0 clamp(.4rem, 3%, 1.1rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(.35rem, 1vh, .65rem);
+  text-align: center;
+  color: var(--on-paper);
+}
+
+.card__index {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--brick);
+}
+.card__index span { color: var(--on-paper-2); font-weight: 400; }
+
+.card__title {
+  font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+  line-height: 1.1;
+  color: var(--on-paper);
+  text-wrap: balance;
+}
+.card__title-num { color: var(--accent); }
+
+.card__kicker {
+  font-size: var(--t-small);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.card__hook {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--on-paper-2);
+  text-wrap: pretty;
+  padding: clamp(.3rem, .8vh, .55rem) 0;
+  border-top: 1px solid rgba(25, 20, 40, .16);
+  border-bottom: 1px solid rgba(25, 20, 40, .16);
+}
+
+.rounds { display: flex; flex-direction: column; gap: clamp(.2rem, .7vh, .42rem); text-align: left; }
+.rounds__item { display: grid; grid-template-columns: auto 1fr; column-gap: .55rem; align-items: baseline; }
+.rounds__n { grid-row: span 2; font-family: var(--font-display); font-size: .82rem; color: var(--brick); }
+.rounds__name { font-size: var(--t-small); font-weight: 600; letter-spacing: .03em; color: var(--on-paper); }
+.rounds__desc {
+  grid-column: 2;
+  font-size: var(--t-label);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--on-paper-2);
+}
+
+.meta { margin-top: auto; display: flex; flex-direction: column; text-align: left; }
+.meta__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .7rem;
+  padding: clamp(.18rem, .6vh, .34rem) 0;
+  border-bottom: 1px dotted rgba(25, 20, 40, .22);
+}
+.meta__row:last-child { border-bottom: 0; }
+.meta dt {
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--on-paper-2);
+}
+.meta dd { font-size: var(--t-small); font-weight: 600; color: var(--on-paper); text-align: right; }
+
+/* On paper the marigold CTA loses all its contrast, so the card button is
+   crimson — the one place crimson is used as a fill rather than an accent. */
+.card .btn { background: var(--crimson); color: var(--paper); align-self: center; }
+.card .btn:hover { background: var(--brick); color: var(--paper); box-shadow: 0 8px 22px rgba(170, 41, 90, .34); }
+
+/* ============================================================================
+   Buttons
+   ========================================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55em;
+  margin-top: clamp(.5rem, 1.4vh, .9rem);
+  padding: .7em 1.4em;
+  border: 0;
+  border-radius: 999px;
+  background: var(--marigold);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.btn:hover {
+  background: var(--marigold-hi);
+  color: var(--ink);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(225, 157, 57, .3);
+}
+.btn:active { transform: translateY(0); }
+.btn__arrow { transition: transform .18s ease; }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.btn--lg { padding: .95em 2.1em; font-size: var(--t-body); letter-spacing: .1em; }
+
+/* ============================================================================
+   ACT TWO — the hackathon
+   ========================================================================= */
+
+.hack {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, var(--ink) 0%, var(--ink-raised) 20%, var(--ink-raised) 80%, var(--ink) 100%);
+  padding: var(--gap-2xl) 0;
+  border-top: 1px solid var(--line);
+}
+
+.hack__inner {
+  width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+}
+
+.hack__head {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 300px);
+  gap: var(--gap-l);
+  align-items: start;
+}
+
+.hack__headline { display: flex; flex-direction: column; gap: var(--gap-s); }
+
+.hack__eyebrow {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--crimson);
+}
+
+/* One flat brick offset. The previous build stacked three coloured shadows,
+   which is exactly what made this section read as noise. */
+.hack__title {
+  font-size: var(--t-h2);
+  color: var(--ice);
+  text-shadow: 4px 4px 0 var(--brick);
+}
+
+.hack__sub {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-s);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.7vw, 1.4rem);
+  letter-spacing: .12em;
+  color: var(--marigold);
+}
+
+.hack__blurb { max-width: 54ch; color: var(--ice-70); text-wrap: pretty; }
+.hack__blurb strong { color: var(--marigold); font-weight: 600; }
+
+.ledger { display: flex; flex-direction: column; padding-left: var(--gap-m); border-left: 1px solid var(--line); }
+.ledger__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gap-m);
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.ledger__row:last-child { border-bottom: 0; }
+.ledger dt {
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ice-55);
+}
+.ledger dd { font-size: var(--t-small); font-weight: 600; color: var(--ice); text-align: right; }
+
+.block { display: flex; flex-direction: column; gap: var(--gap-m); }
+.block__label {
+  font-family: var(--font-body);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ice-38);
+}
+.block__note { max-width: 72ch; font-size: var(--t-small); color: var(--ice-55); text-wrap: pretty; }
+
+.grid { display: grid; gap: var(--gap-m); }
+.grid--two   { grid-template-columns: repeat(2, 1fr); }
+.grid--three { grid-template-columns: repeat(3, 1fr); }
+.grid--four  { grid-template-columns: repeat(4, 1fr); }
+
+.panel {
+  position: relative;
+  padding: var(--gap-m);
+  background: var(--plum-shade);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(var(--marigold), transparent);
+}
+.panel__n { font-family: var(--font-display); font-size: 1.5rem; line-height: 1; color: var(--marigold); }
+.panel__title {
+  margin-top: .35rem;
+  font-family: var(--font-body);
+  font-size: var(--t-h4);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--ice);
+}
+.panel__text { margin-top: .5rem; font-size: var(--t-small); color: var(--ice-70); text-wrap: pretty; }
+
+/* -- tracks: genuinely sealed until day one -------------------------------- */
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  padding: var(--gap-m);
+  background: var(--plum-shade);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.track__n { font-family: var(--font-display); font-size: 1.35rem; line-height: 1; color: var(--marigold); }
+.track__plate {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: .35rem .6rem;
+  background: var(--ink-sunk);
+  border: 1px solid rgba(87, 187, 168, .3);
+  border-radius: 2px;
+  overflow: hidden;
+  font-size: .7rem;
+  letter-spacing: .15em;
+  line-height: 1.2;
+  color: var(--ice-38);
+}
+.track__state {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.mentor { padding-left: var(--gap-s); border-left: 2px solid var(--crimson); }
+.mentor h4 {
+  font-family: var(--font-body);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ice);
+}
+.mentor p { margin-top: .3rem; font-size: var(--t-small); color: var(--ice-55); }
+
+.hack__cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-m);
+  flex-wrap: wrap;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
+}
+.hack__ctatext { max-width: 52ch; font-size: var(--t-small); color: var(--ice-70); }
+
+/* ============================================================================
+   Footer
+   ========================================================================= */
+
+.foot { position: relative; z-index: 1; padding: var(--gap-xl) 0; border-top: 1px solid var(--line); background: var(--ink); }
+.foot__inner {
+  width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gap-m);
+  flex-wrap: wrap;
+}
+.foot__mark { font-family: var(--font-display); font-size: clamp(1.2rem, 2.4vw, 1.8rem); color: var(--crimson); }
+.foot__where { font-size: var(--t-small); color: var(--ice-55); }
+.foot__social { font-size: var(--t-small); font-weight: 500; }
+
+/* ============================================================================
+   Motion
+   ========================================================================= */
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes bob   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+
+/* ============================================================================
+   Phone + tablet
+   ========================================================================= */
+
+@media (max-width: 1024px) {
+  .hack__head { grid-template-columns: 1fr; }
+  .ledger { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: var(--gap-s); }
+  .grid--four  { grid-template-columns: repeat(2, 1fr); }
+  .grid--three { grid-template-columns: 1fr; }
+  .card { width: min(40vw, 380px); }
+}
+
+@media (max-width: 760px) {
+  .act__stage { padding-bottom: clamp(3rem, 8vh, 5rem); }
+
+  /* One card at a time, near-full-bleed and centred over the stage. */
+  .card,
+  .card--one,
+  .card--two {
+    left: 5vw;
+    right: 5vw;
+    width: auto;
+    max-width: 420px;
+    margin-inline: auto;
+    pointer-events: none;
+  }
+  .card .btn { pointer-events: auto; }
+
+  /* A thinner band keeps the interior usable once the card goes full-bleed. */
+  .card { --band: clamp(17px, 6.4vw, 34px); }
+
+  .hero__logo { width: min(58vw, 300px); }
+  .dancer__plate { max-width: 66vw; }
+
+  .grid--two, .grid--four { grid-template-columns: 1fr; }
+  .hack__cta { flex-direction: column; align-items: flex-start; }
+  .foot__inner { flex-direction: column; align-items: flex-start; gap: var(--gap-xs); }
+}
+
+@media (max-width: 420px) {
+  .card { --band: clamp(15px, 5.6vw, 26px); }
+  .rounds__desc { display: none; }
+}
+
+/* Landscape phones — the arch would otherwise overflow the short viewport. */
+@media (max-height: 620px) and (min-width: 761px) {
+  .card { width: min(26vw, 300px); }
+  .card { --band: clamp(18px, 2.4vw, 34px); }
+  .rounds { display: none; }
+}
+
+/* ============================================================================
+   Reduced motion + no-JS — hand back a plain, complete document
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .act { height: auto; }
+  .act__stage {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl);
+    padding: var(--gap-xl) 5vw;
+  }
+  .card, .card--one, .card--two {
+    position: static;
+    width: min(100%, 400px);
+    margin: 0 auto;
+    transform: none;
+    opacity: 1;
+  }
+  .hero, .dancer__plate, .lockline { opacity: 1; transform: none; }
+  .cue { display: none; }
+  .hero__logo { animation: none; }
+  .backdrop__mandala { transform: translate(-50%, -50%); }
+  .btn, .btn__arrow { transition: none; }
+}
+
+/* The engine adds .js on boot. Without it the sticky stage would pin a
+   viewport-tall box and stack both absolute cards over the hero. */
+html:not(.js) .act { height: auto; }
+html:not(.js) .act__stage {
+  position: static;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+  padding: var(--gap-xl) 5vw;
+}
+html:not(.js) .card,
+html:not(.js) .card--one,
+html:not(.js) .card--two {
+  position: static;
+  width: min(100%, 400px);
+  margin: 0 auto;
+  transform: none;
+  opacity: 1;
+}
+html:not(.js) .cue { display: none; }
