@@ -37,30 +37,18 @@
       <feGaussianBlur in="despill" stdDeviation="0.5" result="soft"/>
       <feComposite in="soft" in2="SourceGraphic" operator="in"/>
     </filter>
-
-    <!-- Corner ornament for the hackathon block. Drawn once, placed four
-         times and rotated. A double bracket with a small buta at the elbow,
-         so it echoes the emblems in the field behind rather than reading as
-         a generic corner rule. -->
-    <g id="cornerOrn" fill="none" stroke="currentColor" stroke-width="1.5"
-       stroke-linecap="round" stroke-linejoin="round">
-      <path d="M1 64V22C1 10.4 10.4 1 22 1h42"/>
-      <path d="M10 64V25c0-8.3 6.7-15 15-15h39" opacity=".45"/>
-      <path d="M21.5 21.5c3-4.6 7.7-6.4 11.4-5.2-1.2 3.8-3 8.3-7.6 11"/>
-      <circle cx="16.6" cy="16.6" r="1.8" fill="currentColor" stroke="none"/>
-    </g>
   </defs>
 </svg>
 
 
 <!-- ============================================================
-     Fixed backdrop: the polar buta field (filled by the engine),
-     the burst glow, and the hairline grain. Flat near-black at
-     rest — the glow only opens up for the burst near the end of
-     the act.
+     Fixed backdrop: mandala rings + paper grain. Rotation is
+     driven by --scroll-rot from the scroll engine.
      ============================================================ -->
 <div class="backdrop" aria-hidden="true">
-  <div class="backdrop__weave" id="weave"></div>
+  <div class="backdrop__weave"></div>
+  <div class="backdrop__mandala backdrop__mandala--out"></div>
+  <div class="backdrop__mandala backdrop__mandala--in"></div>
   <div class="backdrop__glow"></div>
   <div class="backdrop__grain"></div>
 </div>
@@ -79,117 +67,10 @@
       <header class="hero">
         <p class="hero__eyebrow">Plaksha University, Mohali <span class="dot">&middot;</span> Sep 19&ndash;20, 2026</p>
         <img class="hero__logo" src="assets/prayas-logo.svg" alt="Prayas" width="380" height="120">
-        <p class="hero__theme"><span class="rule"></span>TECH FEST<span class="rule"></span></p>
+        <p class="hero__theme"><span class="rule"></span>AI for good<span class="rule"></span></p>
       </header>
 
       <div class="dancer">
-
-        <!-- The ring. A double hairline circle carrying beads that spell
-             PRAYAS 2026 three times around, with a pair of dots in each gap.
-             It sits behind the plate on purpose: the figure occludes the lower
-             arc, which is what makes it read as a ring she stands inside
-             rather than a halo pasted over her. -->
-        <svg class="ring" viewBox="0 0 400 400" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
-          <g class="ring__band">
-            <circle cx="200" cy="200" r="163.5"/>
-            <circle cx="200" cy="200" r="172.5"/>
-          </g>
-          <g class="ring__dots">
-            <circle cx="215.99" cy="47.84" r="1.15"/>
-            <circle cx="219.13" cy="18.00" r="1.15"/>
-            <circle cx="247.28" cy="54.49" r="1.15"/>
-            <circle cx="256.55" cy="25.96" r="1.15"/>
-            <circle cx="276.50" cy="67.50" r="1.15"/>
-            <circle cx="291.50" cy="41.52" r="1.15"/>
-            <circle cx="302.38" cy="86.30" r="1.15"/>
-            <circle cx="322.45" cy="64.00" r="1.15"/>
-            <circle cx="323.78" cy="110.07" r="1.15"/>
-            <circle cx="348.05" cy="92.44" r="1.15"/>
-            <circle cx="339.77" cy="137.77" r="1.15"/>
-            <circle cx="367.18" cy="125.57" r="1.15"/>
-            <circle cx="349.66" cy="168.19" r="1.15"/>
-            <circle cx="379.00" cy="161.95" r="1.15"/>
-            <circle cx="353.00" cy="200.00" r="1.15"/>
-            <circle cx="383.00" cy="200.00" r="1.15"/>
-            <circle cx="349.66" cy="231.81" r="1.15"/>
-            <circle cx="379.00" cy="238.05" r="1.15"/>
-            <circle cx="339.77" cy="262.23" r="1.15"/>
-            <circle cx="367.18" cy="274.43" r="1.15"/>
-            <circle cx="323.78" cy="289.93" r="1.15"/>
-            <circle cx="348.05" cy="307.56" r="1.15"/>
-            <circle cx="302.38" cy="313.70" r="1.15"/>
-            <circle cx="322.45" cy="336.00" r="1.15"/>
-            <circle cx="276.50" cy="332.50" r="1.15"/>
-            <circle cx="291.50" cy="358.48" r="1.15"/>
-            <circle cx="247.28" cy="345.51" r="1.15"/>
-            <circle cx="256.55" cy="374.04" r="1.15"/>
-            <circle cx="215.99" cy="352.16" r="1.15"/>
-            <circle cx="219.13" cy="382.00" r="1.15"/>
-            <circle cx="184.01" cy="352.16" r="1.15"/>
-            <circle cx="180.87" cy="382.00" r="1.15"/>
-            <circle cx="152.72" cy="345.51" r="1.15"/>
-            <circle cx="143.45" cy="374.04" r="1.15"/>
-            <circle cx="123.50" cy="332.50" r="1.15"/>
-            <circle cx="108.50" cy="358.48" r="1.15"/>
-            <circle cx="97.62" cy="313.70" r="1.15"/>
-            <circle cx="77.55" cy="336.00" r="1.15"/>
-            <circle cx="76.22" cy="289.93" r="1.15"/>
-            <circle cx="51.95" cy="307.56" r="1.15"/>
-            <circle cx="60.23" cy="262.23" r="1.15"/>
-            <circle cx="32.82" cy="274.43" r="1.15"/>
-            <circle cx="50.34" cy="231.81" r="1.15"/>
-            <circle cx="21.00" cy="238.05" r="1.15"/>
-            <circle cx="47.00" cy="200.00" r="1.15"/>
-            <circle cx="17.00" cy="200.00" r="1.15"/>
-            <circle cx="50.34" cy="168.19" r="1.15"/>
-            <circle cx="21.00" cy="161.95" r="1.15"/>
-            <circle cx="60.23" cy="137.77" r="1.15"/>
-            <circle cx="32.82" cy="125.57" r="1.15"/>
-            <circle cx="76.22" cy="110.07" r="1.15"/>
-            <circle cx="51.95" cy="92.44" r="1.15"/>
-            <circle cx="97.62" cy="86.30" r="1.15"/>
-            <circle cx="77.55" cy="64.00" r="1.15"/>
-            <circle cx="123.50" cy="67.50" r="1.15"/>
-            <circle cx="108.50" cy="41.52" r="1.15"/>
-            <circle cx="152.72" cy="54.49" r="1.15"/>
-            <circle cx="143.45" cy="25.96" r="1.15"/>
-            <circle cx="184.01" cy="47.84" r="1.15"/>
-            <circle cx="180.87" cy="18.00" r="1.15"/>
-          </g>
-          <g class="ring__beads">
-            <g transform="translate(200.00 32.00) rotate(0.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">P</text></g>
-            <g transform="translate(234.93 35.67) rotate(12.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">R</text></g>
-            <g transform="translate(268.33 46.52) rotate(24.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(298.75 64.09) rotate(36.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">Y</text></g>
-            <g transform="translate(324.85 87.59) rotate(48.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(345.49 116.00) rotate(60.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">S</text></g>
-            <g transform="translate(359.78 148.09) rotate(72.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(367.08 182.44) rotate(84.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">0</text></g>
-            <g transform="translate(367.08 217.56) rotate(96.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(359.78 251.91) rotate(108.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">6</text></g>
-            <g transform="translate(345.49 284.00) rotate(120.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">P</text></g>
-            <g transform="translate(324.85 312.41) rotate(132.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">R</text></g>
-            <g transform="translate(298.75 335.91) rotate(144.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(268.33 353.48) rotate(156.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">Y</text></g>
-            <g transform="translate(234.93 364.33) rotate(168.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(200.00 368.00) rotate(180.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">S</text></g>
-            <g transform="translate(165.07 364.33) rotate(192.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(131.67 353.48) rotate(204.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">0</text></g>
-            <g transform="translate(101.25 335.91) rotate(216.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(75.15 312.41) rotate(228.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">6</text></g>
-            <g transform="translate(54.51 284.00) rotate(240.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">P</text></g>
-            <g transform="translate(40.22 251.91) rotate(252.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">R</text></g>
-            <g transform="translate(32.92 217.56) rotate(264.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(32.92 182.44) rotate(276.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">Y</text></g>
-            <g transform="translate(40.22 148.09) rotate(288.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">A</text></g>
-            <g transform="translate(54.51 116.00) rotate(300.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">S</text></g>
-            <g transform="translate(75.15 87.59) rotate(312.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(101.25 64.09) rotate(324.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">0</text></g>
-            <g transform="translate(131.67 46.52) rotate(336.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">2</text></g>
-            <g transform="translate(165.07 35.67) rotate(348.00)"><rect x="-6" y="-7.5" width="12" height="15" rx="3.4"/><text y="3.4">6</text></g>
-          </g>
-        </svg>
-
         <video class="dancer__plate" id="dancer" poster="assets/dancer-poster.jpg"
                muted playsinline preload="auto" disablepictureinpicture disableremoteplayback>
           <source src="assets/dancer-scrub.webm" type="video/webm">
@@ -261,10 +142,7 @@
         </div>
       </article>
 
-      <!-- Both cards have cleared the stage by 80% of the act, so this lands on
-           an empty stage with just the dancer — it is part of the pinned act,
-           not a section after it. -->
-      <p class="lockline">We are excited to announce Prayas &rsquo;26, Plaksha&rsquo;s first standalone technology festival.</p>
+      <p class="lockline">We bring to you : Prayas.</p>
 
       <div class="cue" aria-hidden="true">
         <span class="cue__label">Scroll</span>
@@ -279,20 +157,7 @@
        ACT TWO — the hackathon.
        ========================================================== -->
   <section class="hack" id="hackathon" aria-labelledby="hack-title">
-
-    <!-- Follows the pointer. Purely decorative, and the engine only wires it
-         up on a device that actually has a pointer to follow. -->
-    <div class="hack__glow" aria-hidden="true"></div>
-
     <div class="hack__inner">
-
-      <!-- Marks the corners of the content block, not the browser edges — at
-           the section's own edges these would float away from the content on
-           a wide monitor. -->
-      <svg class="corner corner--tl" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--tr" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--br" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--bl" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
 
       <div class="hack__head">
         <div class="hack__headline">
