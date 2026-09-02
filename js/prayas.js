@@ -105,6 +105,13 @@
       cardTwoIn:  [0.56, 0.66],
       cardTwoOut: [0.78, 0.86],
 
+      // The prabhamandala rays. Open just after card two starts arriving —
+      // a beat behind cardTwoIn rather than exactly on it, so the rays read
+      // as a response to her rather than firing in lockstep — and close well
+      // ahead of the burst and the hackathon, so nothing overlaps the two.
+      rayIn:  [0.58, 0.72],
+      rayOut: [0.82, 0.92],
+
       burstIn:  [0.84, 0.93],
       burstOut: [0.97, 1.00],
 
@@ -404,7 +411,11 @@
     var e1 = seg(b.cardOneIn, p) * (1 - seg(b.cardOneOut, p));
     var e2 = seg(b.cardTwoIn, p) * (1 - seg(b.cardTwoOut, p));
 
-    // The stage is empty from 80% on; the rays open up to fill it.
+    // The prabhamandala rays: open after card two arrives, closed again
+    // before the burst and the hackathon take over — see CONFIG.beats above.
+    var ray = seg(b.rayIn, p) * (1 - seg(b.rayOut, p));
+
+    // The stage is empty from 80% on; the corner wash opens up to fill it.
     var burst = seg(b.burstIn, p) * (1 - seg(b.burstOut, p) * 0.5);
     var lock  = seg(b.lockIn, p);
 
@@ -435,6 +446,8 @@
     // is written: CSS derives the dancer's lift from it, so a short landscape
     // viewport can ask for a bigger lift without the engine knowing about it.
     write("--lock-o", n(lock));
+
+    write("--rays-o", n(ray));
 
     // Flat black at rest, like the reference. The glow exists for the burst.
     write("--glow-o", n(burst));

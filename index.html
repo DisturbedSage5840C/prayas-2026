@@ -61,6 +61,11 @@
      ============================================================ -->
 <div class="backdrop" aria-hidden="true">
   <div class="backdrop__weave" id="weave"></div>
+  <!-- The prabhamandala rays. A rayed halo behind the dancer, on only for
+       the middle of the act: it opens once event two has arrived and closes
+       again before the pin releases into the hackathon, so the hackathon
+       section is never fighting a sunburst for attention. -->
+  <div class="backdrop__rays"></div>
   <div class="backdrop__glow"></div>
   <div class="backdrop__grain"></div>
 </div>
@@ -335,15 +340,6 @@
         <p class="block__note">Each track centres on a different problem space. Detailed descriptions and problem statements drop on the day of the event.</p>
       </div>
 
-      <div class="block">
-        <h3 class="block__label">Mentorship</h3>
-        <div class="grid grid--three">
-          <div class="mentor"><h4>One mentor per track</h4><p>Guiding teams start to finish.</p></div>
-          <div class="mentor"><h4>Mid-hack checkpoint</h4><p>Course-correct while it still matters.</p></div>
-          <div class="mentor"><h4>End-hack checkpoint</h4><p>Sharpen the build before judging.</p></div>
-        </div>
-      </div>
-
       <div class="hack__cta">
         <p class="hack__ctatext">Round 1 open now &mdash; inter-college teams of 3&ndash;4, BTech years 1 to 4.</p>
         <a class="btn btn--lg" href="https://unstop.com/hackathons/prayas-tech-hackathon-prayas-tech-fest-at-plaksha-university-plaksha-univeristy-1742156?lb=useV1rAd&amp;utm_medium=Share&amp;utm_source=online_coding_challenge&amp;utm_campaign=Wuqctjpr86903" target="_blank" rel="noopener">
@@ -351,6 +347,39 @@
         </a>
       </div>
 
+    </div>
+  </section>
+
+  <!-- Mentorship, as its own section below the hackathon block rather than
+       one more .block inside it — plain ground, no corners, no pointer
+       glow, so it reads as a separate beat rather than another shelf in
+       the same box. -->
+  <section class="mentor-timeline" aria-labelledby="mentor-title">
+    <div class="mentor-timeline__inner">
+      <h3 class="block__label" id="mentor-title">Mentorship</h3>
+      <ol class="timeline">
+        <li class="timeline__step">
+          <span class="timeline__node">01</span>
+          <div class="timeline__card">
+            <h4 class="timeline__title">One mentor per track</h4>
+            <p class="timeline__text">Guiding teams start to finish.</p>
+          </div>
+        </li>
+        <li class="timeline__step">
+          <span class="timeline__node">02</span>
+          <div class="timeline__card">
+            <h4 class="timeline__title">Mid-hack checkpoint</h4>
+            <p class="timeline__text">Course-correct while it still matters.</p>
+          </div>
+        </li>
+        <li class="timeline__step">
+          <span class="timeline__node">03</span>
+          <div class="timeline__card">
+            <h4 class="timeline__title">End-hack checkpoint</h4>
+            <p class="timeline__text">Sharpen the build before judging.</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 
