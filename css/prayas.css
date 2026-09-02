@@ -36,6 +36,10 @@
   /* The ring runs hotter than the brand crimson so it holds against the
      dancer's own pink. Still crimson's hue — it is not a second accent. */
   --crimson-hot: #d8367a;
+  /* A genuine neon magenta — brighter and cooler than crimson-hot — reserved
+     for the two things on the page meant to read as lit signage rather than
+     brand colour: the wordmark's glow and the halo behind the dancer. */
+  --neon-pink: #ff2e9f;
   /* Mint is a light cool accent — it disappears on paper stock. This is the
      same hue taken dark enough to read there. */
   --mint-deep:   #2c6b5f;
@@ -82,7 +86,7 @@
   --hero-o: 1;   --hero-y: 0px;
   --e1-o: 1;     --e1-x: 0px;
   --e2-o: 1;     --e2-x: 0px;
-  --cue-o: 1;  --glow-o: 0;  --rays-o: 0;
+  --cue-o: 1;  --glow-o: 0;  --halo-o: 0;
   --ring-o: 1;   --ring-s: 1;
   --lock-o: 0;
   /* How far the dancer rises and shrinks as the closing line arrives.
@@ -194,42 +198,6 @@ a:hover { color: var(--marigold-hi); }
   opacity: var(--buta-o, .3);
 }
 
-/* -- the prabhamandala rays --------------------------------------------------
-   A rayed halo (prabhamandala — the aureole behind a deity figure) fanning
-   out from behind the dancer. Centred on --stage-x/y, same as the buta field,
-   so the two share one origin. A repeating-conic-gradient read at full
-   sharpness is a strobing spoke pattern; blurred, the same gradient becomes
-   soft fanned rays. --rays-o is written by the engine — see CONFIG.beats.ray
-   in js/prayas.js — opening only in the window around event two. */
-.backdrop__rays {
-  position: absolute;
-  left: var(--stage-x, 50%);
-  top: var(--stage-y, 46%);
-  width: 150vmax;
-  height: 150vmax;
-  transform: translate(-50%, -50%) rotate(calc(var(--rot) * .4));
-  transform-origin: 50% 50%;
-  opacity: var(--rays-o);
-  will-change: transform, opacity;
-  /* Narrow, high-contrast slivers rather than a wide wash — a light blur
-     softens their edges without dissolving them into an ambient glow, which
-     is what a 30px blur over wide bands did on the first pass. */
-  background-image: repeating-conic-gradient(
-    from 0deg at 50% 50%,
-    rgba(216, 54, 122, .6) 0deg 1.6deg,
-    transparent 1.6deg 5.2deg,
-    rgba(225, 157, 57, .32) 5.2deg 6.4deg,
-    transparent 6.4deg 13deg
-  );
-  filter: blur(9px);
-  mix-blend-mode: screen;
-  /* Strongest through the band the ring actually sits in, tapering out well
-     past it — the first pass faded by 66% of the box, which was most of its
-     strength gone before the rays ever cleared the ring. */
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,.75) 6%, #000 22%, rgba(0,0,0,.6) 46%, transparent 70%);
-          mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,.75) 6%, #000 22%, rgba(0,0,0,.6) 46%, transparent 70%);
-}
-
 /* Reserved for the burst — flat black at rest, exactly like the reference. */
 .backdrop__glow {
   position: absolute;
@@ -301,7 +269,16 @@ main { position: relative; z-index: 1; }
 .hero__logo {
   width: min(38vw, 360px);
   height: auto;
-  filter: drop-shadow(0 0 30px rgba(170, 41, 90, .28));
+  /* A neon-sign rim rather than one soft shadow: each drop-shadow follows
+     the wordmark's own alpha silhouette, so stacking several at rising blur
+     radii builds a tight bright edge with a wider halo falling away from
+     it — the layering is what reads as "lit from within" instead of "sitting
+     in front of a glow". */
+  filter:
+    drop-shadow(0 0 2px rgba(255, 46, 159, .9))
+    drop-shadow(0 0 10px rgba(255, 46, 159, .7))
+    drop-shadow(0 0 24px rgba(255, 46, 159, .5))
+    drop-shadow(0 0 46px rgba(255, 46, 159, .32));
   animation: float 7s ease-in-out infinite;
 }
 
@@ -335,6 +312,32 @@ main { position: relative; z-index: 1; }
     scale(calc(1 - var(--lock-o) * var(--lift-k)));
   transform-origin: 50% 38%;
   will-change: transform;
+}
+
+/* -- the glow behind her -----------------------------------------------------
+   A soft pink-neon halo at her back — nothing more elaborate than that. (An
+   earlier pass drew this as a full sunburst of rays; it read as gimmicky, so
+   this replaced it with a plain glow.) Scoped to .dancer rather than the
+   fixed backdrop, so it simply sits behind the ring and the plate in DOM
+   order and needs no coordinate math to stay centred on her — it moves and
+   settles with her for free. --halo-o is written by the engine — see
+   CONFIG.beats.haloIn/haloOut in js/prayas.js — opening only in the window
+   around event two, closed again well before the hackathon. */
+.dancer__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 58%;
+  height: 58%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* Capped well under 1 — at full strength the flat colour read as a solid
+     disc behind her rather than a glow, no matter how soft the gradient. */
+  opacity: calc(var(--halo-o) * .55);
+  will-change: opacity;
+  background: radial-gradient(circle at 50% 50%, var(--neon-pink) 0%, rgba(255, 46, 159, .4) 45%, transparent 75%);
+  filter: blur(52px);
+  mix-blend-mode: screen;
 }
 
 /* -- the ring ---------------------------------------------------------------
