@@ -105,6 +105,13 @@
       cardTwoIn:  [0.56, 0.66],
       cardTwoOut: [0.78, 0.86],
 
+      // The glow at her back. Opens just after card two starts arriving —
+      // a beat behind cardTwoIn rather than exactly on it, so it reads as a
+      // response to her rather than firing in lockstep — and closes well
+      // ahead of the burst and the hackathon, so nothing overlaps the two.
+      haloIn:  [0.58, 0.72],
+      haloOut: [0.82, 0.92],
+
       burstIn:  [0.84, 0.93],
       burstOut: [0.97, 1.00],
 
@@ -404,7 +411,11 @@
     var e1 = seg(b.cardOneIn, p) * (1 - seg(b.cardOneOut, p));
     var e2 = seg(b.cardTwoIn, p) * (1 - seg(b.cardTwoOut, p));
 
-    // The stage is empty from 80% on; the rays open up to fill it.
+    // The glow at her back: opens after card two arrives, closed again
+    // before the burst and the hackathon take over — see CONFIG.beats above.
+    var halo = seg(b.haloIn, p) * (1 - seg(b.haloOut, p));
+
+    // The stage is empty from 80% on; the corner wash opens up to fill it.
     var burst = seg(b.burstIn, p) * (1 - seg(b.burstOut, p) * 0.5);
     var lock  = seg(b.lockIn, p);
 
@@ -435,6 +446,8 @@
     // is written: CSS derives the dancer's lift from it, so a short landscape
     // viewport can ask for a bigger lift without the engine knowing about it.
     write("--lock-o", n(lock));
+
+    write("--halo-o", n(halo));
 
     // Flat black at rest, like the reference. The glow exists for the burst.
     write("--glow-o", n(burst));

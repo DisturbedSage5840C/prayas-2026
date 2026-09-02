@@ -36,6 +36,10 @@
   /* The ring runs hotter than the brand crimson so it holds against the
      dancer's own pink. Still crimson's hue — it is not a second accent. */
   --crimson-hot: #d8367a;
+  /* A genuine neon magenta — brighter and cooler than crimson-hot — reserved
+     for the two things on the page meant to read as lit signage rather than
+     brand colour: the wordmark's glow and the halo behind the dancer. */
+  --neon-pink: #ff2e9f;
   /* Mint is a light cool accent — it disappears on paper stock. This is the
      same hue taken dark enough to read there. */
   --mint-deep:   #2c6b5f;
@@ -82,7 +86,7 @@
   --hero-o: 1;   --hero-y: 0px;
   --e1-o: 1;     --e1-x: 0px;
   --e2-o: 1;     --e2-x: 0px;
-  --cue-o: 1;  --glow-o: 0;
+  --cue-o: 1;  --glow-o: 0;  --halo-o: 0;
   --ring-o: 1;   --ring-s: 1;
   --lock-o: 0;
   /* How far the dancer rises and shrinks as the closing line arrives.
@@ -265,7 +269,16 @@ main { position: relative; z-index: 1; }
 .hero__logo {
   width: min(38vw, 360px);
   height: auto;
-  filter: drop-shadow(0 0 30px rgba(170, 41, 90, .28));
+  /* A neon-sign rim rather than one soft shadow: each drop-shadow follows
+     the wordmark's own alpha silhouette, so stacking several at rising blur
+     radii builds a tight bright edge with a wider halo falling away from
+     it — the layering is what reads as "lit from within" instead of "sitting
+     in front of a glow". */
+  filter:
+    drop-shadow(0 0 2px rgba(255, 46, 159, .9))
+    drop-shadow(0 0 10px rgba(255, 46, 159, .7))
+    drop-shadow(0 0 24px rgba(255, 46, 159, .5))
+    drop-shadow(0 0 46px rgba(255, 46, 159, .32));
   animation: float 7s ease-in-out infinite;
 }
 
@@ -299,6 +312,32 @@ main { position: relative; z-index: 1; }
     scale(calc(1 - var(--lock-o) * var(--lift-k)));
   transform-origin: 50% 38%;
   will-change: transform;
+}
+
+/* -- the glow behind her -----------------------------------------------------
+   A soft pink-neon halo at her back — nothing more elaborate than that. (An
+   earlier pass drew this as a full sunburst of rays; it read as gimmicky, so
+   this replaced it with a plain glow.) Scoped to .dancer rather than the
+   fixed backdrop, so it simply sits behind the ring and the plate in DOM
+   order and needs no coordinate math to stay centred on her — it moves and
+   settles with her for free. --halo-o is written by the engine — see
+   CONFIG.beats.haloIn/haloOut in js/prayas.js — opening only in the window
+   around event two, closed again well before the hackathon. */
+.dancer__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 58%;
+  height: 58%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* Capped well under 1 — at full strength the flat colour read as a solid
+     disc behind her rather than a glow, no matter how soft the gradient. */
+  opacity: calc(var(--halo-o) * .55);
+  will-change: opacity;
+  background: radial-gradient(circle at 50% 50%, var(--neon-pink) 0%, rgba(255, 46, 159, .4) 45%, transparent 75%);
+  filter: blur(52px);
+  mix-blend-mode: screen;
 }
 
 /* -- the ring ---------------------------------------------------------------
@@ -460,27 +499,23 @@ main { position: relative; z-index: 1; }
 .card--two { right: 4vw; --card-o: var(--e2-o); --card-x: var(--e2-x); --accent: var(--brick); }
 
 /* -- the ornamental plate ---------------------------------------------------
-   Every surface on this page that reads as printed stock uses this one rule:
-   the two event cards and the boxes in the hackathon section. The border is
-   an illustrated Pattachitra frame applied with border-image, so the four
-   corners stay pristine (border-image never stretches a corner) while the
-   vine tiles along the edges.
+   Every surface on this page that reads as printed stock shares this paper
+   styling: the two event cards and the boxes in the hackathon section. Only
+   the BORDER differs between the two groups now — everything else about the
+   stock (colour, press texture, shadow depth) is one rule so a plate is
+   recognisably a plate wherever it sits.
 
-   --band is the only thing that varies. The source plate is 139px of border
-   on 956px of artwork — 14.5% — so a small box needs a proportionally thinner
-   band, otherwise the vine eats the content. Each component sets its own. */
+   Event cards keep the original illustrated Pattachitra border (peacocks,
+   elephants, dense multicolour vine) — they sit over the pinned stage and
+   read as the page's centrepiece, so they keep the richer plate. Everything
+   in the hackathon section takes the lighter marigold frame lifted from the
+   Insta banner's side panels — see the rule below. */
 .card__frame,
 .panel,
 .track,
-.mentor {
+.timeline__card {
   position: relative;
   border-style: solid;
-  border-image-source: url("../assets/card-frame.webp");
-  /* source slices in source pixels: top right bottom left */
-  border-image-slice: 168 139 148 139;
-  border-image-repeat: round;
-  border-width: calc(var(--band) * 1.21) var(--band) calc(var(--band) * 1.07) var(--band);
-
   background-color: var(--paper);
   /* faint press texture so the interior is stock, not flat fill */
   background-image: radial-gradient(rgba(132, 38, 24, .07) 1px, transparent 1.2px);
@@ -489,9 +524,41 @@ main { position: relative; z-index: 1; }
   box-shadow: 0 10px 26px rgba(6, 6, 9, .5);
 }
 
-/* The cards are the largest plates and sit over the pinned stage, so they
-   carry a deeper shadow than the boxes further down the page. */
-.card__frame { box-shadow: 0 20px 44px rgba(6, 6, 9, .62); }
+/* -- event cards: the original illustrated plate ----------------------------
+   Untouched by the banner-frame swap below. The source plate is 139px of
+   border on a 956px-wide artwork — 14.5% — so keeping the rendered band near
+   that ratio is what stops the linework looking stretched. */
+.card__frame {
+  border-image-source: url("../assets/card-frame.webp");
+  /* source slices in source pixels: top right bottom left */
+  border-image-slice: 168 139 148 139;
+  border-image-repeat: round;
+  border-width: calc(var(--band) * 1.21) var(--band) calc(var(--band) * 1.07) var(--band);
+  /* The largest plate on the page, sitting over the pinned stage, so it
+     carries a deeper shadow than the boxes further down. */
+  box-shadow: 0 20px 44px rgba(6, 6, 9, .62);
+}
+
+/* -- hackathon boxes: the banner frame ---------------------------------------
+   assets/card-frame.svg — the marigold rule, hairline inset, cusped corner
+   finials and teal vine ticks taken from the Insta banner's side panels —
+   applied with border-image, so the four corners stay pristine (border-image
+   never stretches a corner) while the straight runs tile along the edges.
+
+   --band is the only thing that varies, and each component sets its own: the
+   frame is line art rather than a dense illustrated plate, so it holds up far
+   thinner than the event cards' border does. */
+.panel,
+.track,
+.timeline__card {
+  border-image-source: url("../assets/card-frame.svg");
+  /* Slices in the source's own units: the drawing is 400 square with a
+     64-unit border, so one number does all four sides — symmetrical by
+     construction, which is also why the band is a single flat value. */
+  border-image-slice: 64;
+  border-image-repeat: round;
+  border-width: var(--band);
+}
 
 .card__body {
   position: relative;
@@ -767,12 +834,11 @@ main { position: relative; z-index: 1; }
 .block__note { max-width: 72ch; font-size: var(--t-small); color: var(--ice-55); text-wrap: pretty; }
 
 .grid { display: grid; gap: var(--gap-m); }
-.grid--two   { grid-template-columns: repeat(2, 1fr); }
-.grid--three { grid-template-columns: repeat(3, 1fr); }
-.grid--four  { grid-template-columns: repeat(4, 1fr); }
+.grid--two  { grid-template-columns: repeat(2, 1fr); }
+.grid--four { grid-template-columns: repeat(4, 1fr); }
 
 .panel {
-  --band: clamp(15px, 1.9vw, 26px);
+  --band: clamp(12px, 1.5vw, 20px);
   /* The band already insets the content; this is only the breathing room
      between the vine and the type. */
   padding: clamp(.5rem, 1.3vw, 1rem) clamp(.7rem, 1.6vw, 1.2rem);
@@ -788,10 +854,75 @@ main { position: relative; z-index: 1; }
 }
 .panel__text { margin-top: .5rem; font-size: var(--t-small); color: var(--on-paper-2); text-wrap: pretty; }
 
+/* -- the mentorship timeline -------------------------------------------------
+   A horizontal rule threading through numbered nodes, each carrying a small
+   plate. Column count is not hardcoded — auto-fit lets the same component
+   hold three steps today without leaving a rule built for five. */
+
+.timeline {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap-m);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The connecting rule. Behind everything and z-index'd under the nodes, whose
+   opaque fill is what visually "breaks" it into five segments. */
+.timeline::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 5%;
+  right: 5%;
+  top: 17px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--marigold-lo) 8%, var(--marigold-lo) 92%, transparent);
+}
+
+.timeline__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-s);
+  text-align: center;
+}
+
+.timeline__node {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ink-sunk);
+  border: 1.5px solid var(--marigold);
+  font-family: var(--font-display);
+  font-size: .9rem;
+  color: var(--marigold);
+}
+
+.timeline__card {
+  width: 100%;
+  --band: clamp(9px, 1vw, 14px);
+  padding: clamp(.6rem, 1.4vw, 1rem) clamp(.7rem, 1.5vw, 1.2rem);
+}
+.timeline__title {
+  font-family: var(--font-body);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--on-paper);
+}
+.timeline__text { margin-top: .3rem; font-size: var(--t-label); color: var(--on-paper-2); text-wrap: pretty; }
+
 /* -- tracks: genuinely sealed until day one -------------------------------- */
 
 .track {
-  --band: clamp(12px, 1.4vw, 19px);
+  --band: clamp(10px, 1.2vw, 16px);
   display: flex;
   flex-direction: column;
   gap: .55rem;
@@ -820,22 +951,6 @@ main { position: relative; z-index: 1; }
   color: var(--mint-deep);
 }
 
-.mentor {
-  /* The shortest plates on the page — two lines of type. A band sized like
-     the others would take nearly half their height, so these run thinner. */
-  --band: clamp(10px, 1.15vw, 16px);
-  padding: clamp(.7rem, 1.5vw, 1.1rem) clamp(.8rem, 1.7vw, 1.3rem);
-}
-.mentor h4 {
-  font-family: var(--font-body);
-  font-size: var(--t-small);
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--on-paper);
-}
-.mentor p { margin-top: .3rem; font-size: var(--t-small); color: var(--on-paper-2); }
-
 .hack__cta {
   display: flex;
   justify-content: space-between;
@@ -846,6 +961,27 @@ main { position: relative; z-index: 1; }
   border-top: 1px solid var(--line);
 }
 .hack__ctatext { max-width: 52ch; font-size: var(--t-small); color: var(--ice-70); }
+
+/* ============================================================================
+   Mentorship timeline — its own section, not another shelf inside the
+   hackathon block. Plain ground (the buta field shows straight through,
+   same as the footer below it), with only a hairline top border to mark
+   where the hackathon block ends.
+   ========================================================================= */
+
+.mentor-timeline {
+  position: relative;
+  z-index: 1;
+  padding: var(--gap-2xl) 0;
+  border-top: 1px solid var(--line);
+}
+.mentor-timeline__inner {
+  width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-m);
+}
 
 /* ============================================================================
    Footer
@@ -879,8 +1015,7 @@ main { position: relative; z-index: 1; }
 @media (max-width: 1024px) {
   .hack__head { grid-template-columns: 1fr; }
   .ledger { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: var(--gap-s); }
-  .grid--four  { grid-template-columns: repeat(2, 1fr); }
-  .grid--three { grid-template-columns: 1fr; }
+  .grid--four { grid-template-columns: repeat(2, 1fr); }
   .card { width: min(40vw, 380px); }
 }
 
@@ -909,6 +1044,14 @@ main { position: relative; z-index: 1; }
   .lockline { bottom: clamp(3rem, 7vh, 5rem); font-size: clamp(1rem, 4vw, 1.3rem); }
 
   .grid--two, .grid--four { grid-template-columns: 1fr; }
+
+  .timeline { grid-template-columns: 1fr; gap: var(--gap-l); }
+  .timeline::before {
+    left: 17px; right: auto; top: 6px; bottom: 6px; width: 1px; height: auto;
+    background: linear-gradient(180deg, transparent, var(--marigold-lo) 6%, var(--marigold-lo) 94%, transparent);
+  }
+  .timeline__step { flex-direction: row; align-items: flex-start; text-align: left; }
+  .timeline__card { text-align: left; }
 
   /* The shell is 92vw here, so the desktop inset would hang the ornaments off
      the side of the screen. Pull them in and size them down to match. */
