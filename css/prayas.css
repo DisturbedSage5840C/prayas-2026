@@ -424,7 +424,12 @@ main { position: relative; z-index: 1; }
   height: 88%;
   object-fit: contain;
   transform: translateX(-50%);
-  filter: url(#dancerKey) drop-shadow(0 0 18px rgba(170, 41, 90, .28));
+  /* A plain CSS filter only. The chroma key used to live here as
+     `url(#dancerKey)`, which WebKit silently drops on a <video> and
+     Chrome on Android renders as a black box — the key is baked into
+     the media now. Shorthand filters like this one do composite on a
+     video everywhere, so the glow stays. */
+  filter: drop-shadow(0 0 18px rgba(170, 41, 90, .28));
   /* Her entrance belongs to page load, not to scroll: the reference has her
      on screen at the very top of the act, alongside the scroll cue. Tying it
      to progress instead meant an empty stage until you had already scrolled. */

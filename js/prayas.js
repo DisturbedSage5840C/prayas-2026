@@ -227,7 +227,114 @@
     }
   }
 
-  if (video) {
+  /* -- which plate can this browser actually composite? -----------------------
+     The plate is an alpha video now, and alpha support cannot be asked about.
+     canPlayType() answers for the CODEC, not for the alpha channel, and both
+     engines say "probably" to the format they then handle differently:
+
+       Safari 18   VP9/WebM  "probably"  -> alpha channel DISCARDED, opaque box
+                   HEVC/MP4  "probably"  -> alpha honoured
+       Chrome 151  VP9/WebM  "probably"  -> alpha honoured
+                   HEVC/MP4  ""          -> (decodes anyway on some platforms)
+
+     A <source> list would hand Safari the WebM and leave a dark green plate
+     on screen with no error to catch. So ask in pixels instead: decode one
+     16x16 frame whose right half is fully transparent, draw it to a canvas,
+     and read the alpha back. ~830 bytes of base64, inline, one decode, no
+     network request.
+
+     Verified against Safari 18.6 (WebKit 605) and Chrome 151. */
+
+  var PROBE_WEBM = "data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAJBEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHYTbuMU6uEElTDZ1OsggEpTbuMU6uEHFO7a1OsggIr7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsirXsYMPQkBNgI1MYXZmNjIuMTIuMTAxV0GNTGF2ZjYyLjEyLjEwMUSJiEBEAAAAAAAAFlSua8yuAQAAAAAAAEPXgQFzxYgK7M2IrNzsT5yBACK1nIN1bmSIgQCGhVZfVlA5g4EBI+ODhAJiWgDglLCBELqBEJqBAlPAgQFVsIRVuYEBElTDZ0CAc3OgY8CAZ8iaRaOHRU5DT0RFUkSHjUxhdmY2Mi4xMi4xMDFzc9pjwItjxYgK7M2IrNzsT2fIpUWjh0VOQ09ERVJEh5hMYXZjNjIuMjguMTAxIGxpYnZweC12cDlnyKFFo4hEVVJBVElPTkSHkzAwOjAwOjAwLjA0MDAwMDAwMAAfQ7Z19+eBAKDyocGBAAAAgkmDQgAA8AD2ADgkHBgAAAAgAAAflf///lGUp////cQ8AJT////YHD////8DnCH////9tQB////+ni4AAHWhrKaq7oEBpaWCSYNCAADwAPYAOCQcGAAAACAAAB7////90r0U////6/qRQAAAHFO7a5G7j7OBALeK94EB8YIBr/CBAw==";
+
+  /** Decode the probe and report whether its transparent half stayed transparent. */
+  function detectAlphaVideo(done) {
+    var settled = false;
+    function finish(ok) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      done(ok);
+    }
+
+    var v = document.createElement("video");
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = "auto";
+    // A detached element decodes fine in Safari 18 and Chrome 151, but that
+    // is not guaranteed anywhere, and an element in the document is the case
+    // engines actually optimise for. Park it off-screen rather than hiding it:
+    // display:none or visibility:hidden would licence a browser to skip the
+    // decode entirely, which is the one thing this must not do.
+    v.setAttribute("aria-hidden", "true");
+    v.style.cssText = "position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px";
+
+    v.addEventListener("loadeddata", function () {
+      // One frame decoded is not the same as one frame presented; give the
+      // compositor a beat before reading pixels back.
+      setTimeout(function () {
+        var ok = false;
+        try {
+          var c = document.createElement("canvas");
+          c.width = c.height = 16;
+          var g = c.getContext("2d");
+          g.clearRect(0, 0, 16, 16);
+          g.drawImage(v, 0, 0, 16, 16);
+          var clear = g.getImageData(13, 8, 1, 1).data;   // the transparent half
+          var solid = g.getImageData(3, 8, 1, 1).data;    // the opaque half
+          // Both halves have to read correctly. A canvas that was never
+          // painted also reports alpha 0, and would otherwise pass.
+          ok = clear[3] < 24 && solid[3] > 231;
+        } catch (e) {}
+        if (v.parentNode) v.parentNode.removeChild(v);
+        finish(ok);
+      }, 120);
+    });
+
+    v.addEventListener("error", function () {
+      if (v.parentNode) v.parentNode.removeChild(v);
+      finish(false);
+    });
+
+    var timer = setTimeout(function () {
+      if (v.parentNode) v.parentNode.removeChild(v);
+      finish(false);
+    }, 4000);
+
+    v.src = PROBE_WEBM;
+    (document.body || document.documentElement).appendChild(v);
+    v.load();
+  }
+
+  /** Point the plate at a source this browser will composite, then wire it up. */
+  function selectPlateSource(onChosen) {
+    var webm = video.getAttribute("data-webm");
+    var mp4 = video.getAttribute("data-mp4");
+
+    detectAlphaVideo(function (webmAlphaWorks) {
+      var src = webmAlphaWorks ? webm : mp4;
+
+      // Nothing to fall back to: the poster is already the pre-keyed figure,
+      // so leaving src unset is a complete, correct plate — not a blank box.
+      if (!src || (!webmAlphaWorks && !video.canPlayType("video/mp4; codecs=\"hvc1\""))) {
+        scrubbingIsDead = true;
+        if (window.console && console.info) {
+          console.info("[prayas] dancer: no source composites alpha here — holding the poster");
+        }
+        return;
+      }
+
+      if (window.console && console.info) {
+        console.info("[prayas] dancer: " + (webmAlphaWorks ? "VP9/WebM" : "HEVC/MP4") + " alpha");
+      }
+      video.preload = "auto";
+      video.src = src;
+      video.load();
+      onChosen();
+    });
+  }
+
+  function wirePlate() {
     if (video.readyState >= 1 && video.duration) armVideo();
     video.addEventListener("loadedmetadata", armVideo);
     video.addEventListener("durationchange", armVideo);
@@ -261,6 +368,8 @@
       }
     }, 1000);
   }
+
+  if (video) selectPlateSource(wirePlate);
 
   /* -- state ---------------------------------------------------------------- */
 
