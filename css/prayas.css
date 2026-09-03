@@ -1159,7 +1159,7 @@ main { position: relative; z-index: 1; }
   padding-top: var(--gap-s);
   border-top: 1px solid var(--line);
 }
-.hack__ctatext { max-width: 52ch; font-size: var(--t-small); color: var(--ice-70); }
+.hack__ctatext { font-size: var(--t-body); color: var(--ice-70); white-space: nowrap; }
 
 /* ============================================================================
    Mentorship timeline — its own section, not another shelf inside the
@@ -1261,6 +1261,7 @@ main { position: relative; z-index: 1; }
   .corner--bl, .corner--br { bottom: calc(var(--gap-m) * -1); }
 
   .hack__cta { flex-direction: column; align-items: flex-start; }
+  .hack__ctatext { white-space: normal; }
   .foot__inner { flex-direction: column; align-items: flex-start; gap: var(--gap-xs); }
 }
 
