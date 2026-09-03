@@ -140,6 +140,15 @@ a:hover { color: var(--marigold-hi); }
 
 .defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .dot { color: var(--marigold); padding: 0 .35em; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .rule {
   display: inline-block;
@@ -512,7 +521,6 @@ main { position: relative; z-index: 1; }
    Insta banner's side panels — see the rule below. */
 .card__frame,
 .panel,
-.track,
 .timeline__card {
   position: relative;
   border-style: solid;
@@ -549,7 +557,6 @@ main { position: relative; z-index: 1; }
    frame is line art rather than a dense illustrated plate, so it holds up far
    thinner than the event cards' border does. */
 .panel,
-.track,
 .timeline__card {
   border-image-source: url("../assets/card-frame.svg");
   /* Slices in the source's own units: the drawing is 400 square with a
@@ -919,36 +926,228 @@ main { position: relative; z-index: 1; }
 }
 .timeline__text { margin-top: .3rem; font-size: var(--t-label); color: var(--on-paper-2); text-wrap: pretty; }
 
-/* -- tracks: genuinely sealed until day one -------------------------------- */
+/* -- tracks: genuinely sealed until day one --------------------------------
+   Ported from the Figma Make envelope prototype (jaali lattice, corner
+   dots, mandala wax seal) rather than the site's own printed-plate frame —
+   an envelope sitting loose on the stock reads as an object you can pick
+   up; boxing it in the same border-image plate as the panels above it
+   would have made it look like just another static card. */
 
 .track {
-  --band: clamp(10px, 1.2vw, 16px);
   display: flex;
   flex-direction: column;
-  gap: .55rem;
-  padding: clamp(.5rem, 1.3vw, 1rem) clamp(.7rem, 1.6vw, 1.1rem);
+  align-items: center;
+  gap: .5rem;
 }
-.track__n { font-family: var(--font-display); font-size: 1.35rem; line-height: 1; color: var(--brick); }
-/* A redaction bar struck across the stock, rather than a lit panel — the
-   sealed state has to read as something withheld from a printed plate. */
-.track__plate {
-  align-self: flex-start;
-  max-width: 100%;
-  padding: .3rem .55rem;
-  background: var(--on-paper);
-  border-radius: 2px;
+.track__n { font-family: var(--font-display); font-size: 1.1rem; line-height: 1; color: var(--marigold); }
+
+/* The wax colour rotates through the palette so the four seals read as a
+   set without being identical — same trick as the accent dots elsewhere. */
+.track:nth-child(1) { --seal: var(--brick); }
+.track:nth-child(2) { --seal: var(--mint-deep); }
+.track:nth-child(3) { --seal: var(--marigold-lo); }
+.track:nth-child(4) { --seal: var(--brick); }
+
+/* -- the envelope ------------------------------------------------------------
+   A pocket + flap + wax seal, all in the copper linework of the prototype's
+   jaali pattern, with the letter behind the flap as a sibling of the
+   envelope button — .track__stage is their shared positioning context.
+   Clicking (or Enter/Space, native to the button) breaks the seal, folds
+   the flap back and lets the letter rise out from underneath. */
+
+.track__stage { position: relative; margin-bottom: 1.6rem; width: 100%; }
+
+.track__env {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.track__pocket {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: linear-gradient(160deg, var(--paper), var(--paper-shade));
+  box-shadow:
+    inset 0 0 0 1px rgba(132, 38, 24, .18),
+    0 12px 22px rgba(6, 6, 9, .5);
   overflow: hidden;
-  font-size: .7rem;
-  letter-spacing: .15em;
-  line-height: 1.2;
-  color: rgba(249, 246, 231, .34);
 }
-.track__state {
-  font-size: var(--t-label);
+.track__jaali { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .3; }
+.track__dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--marigold-lo);
+  opacity: .55;
+}
+.track__dot--tl { left: 6px; top: 6px; }
+.track__dot--tr { right: 6px; top: 6px; }
+.track__dot--bl { left: 6px; bottom: 6px; }
+.track__dot--br { right: 6px; bottom: 6px; }
+/* the pocket's folded-paper seam, echoing the flap's point below the fold */
+.track__pocket::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(132, 38, 24, 0), rgba(132, 38, 24, .09));
+  clip-path: polygon(0 46%, 50% 100%, 100% 46%, 100% 100%, 0 100%);
+}
+.track__seam {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--marigold-lo);
+  stroke-opacity: .4;
+  stroke-width: .6;
+}
+
+.track__flap {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 60%;
+  z-index: 3;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform .7s cubic-bezier(.6, 0, .2, 1);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, var(--paper-shade), var(--paper));
+  box-shadow: inset 0 -1px 0 rgba(132, 38, 24, .14);
+}
+.track.is-open .track__flap { transform: rotateX(-162deg); }
+.track__flap-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.track__flap-line { fill: none; stroke: var(--marigold-lo); stroke-opacity: .55; stroke-width: .9; }
+.track__flap-line--accent { stroke: var(--seal, var(--brick)); stroke-opacity: .3; stroke-width: .5; }
+
+.track__wax {
+  position: absolute;
+  left: 50%;
+  top: 33%;
+  width: 25%;
+  aspect-ratio: 1;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  color: var(--paper);
+  background: radial-gradient(circle at 34% 28%, var(--marigold-hi), var(--seal, var(--brick)) 58%, rgba(0, 0, 0, .55) 115%);
+  box-shadow:
+    0 3px 8px rgba(6, 6, 9, .5),
+    inset 0 2px 4px rgba(255, 255, 255, .25),
+    inset 0 -3px 6px rgba(0, 0, 0, .4);
+  transition: opacity .3s ease, transform .35s ease;
+}
+.track__wax-icon { width: 58%; height: 58%; animation: track-mandala-spin 22s linear infinite; }
+.track.is-open .track__wax-icon { animation: none; }
+.track__env:hover .track__wax { transform: translate(-50%, -50%) scale(1.05); }
+.track.is-open .track__wax {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.55) rotate(14deg);
+}
+@keyframes track-mandala-spin { to { transform: rotate(360deg); } }
+
+.track__cta {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1.5rem;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: .62rem;
   font-weight: 600;
-  letter-spacing: .22em;
+  letter-spacing: .28em;
   text-transform: uppercase;
-  color: var(--mint-deep);
+  color: var(--ice-38);
+  transition: color .3s ease;
+}
+.track.is-open .track__cta { color: var(--mint); }
+
+.track__letter {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 10%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  padding: 1rem .7rem .8rem;
+  border-radius: 6px;
+  text-align: center;
+  background: linear-gradient(180deg, #fffdf4, var(--paper));
+  box-shadow:
+    inset 0 0 0 3px var(--paper),
+    inset 0 0 0 4px var(--marigold-lo),
+    0 16px 26px -10px rgba(6, 6, 9, .55);
+  opacity: 0;
+  transform: translateY(8%);
+  pointer-events: none;
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1), opacity .45s ease;
+}
+.track.is-open .track__letter {
+  z-index: 5;
+  opacity: 1;
+  transform: translateY(-62%);
+  pointer-events: auto;
+}
+.track.is-open { z-index: 2; } /* let the risen letter clear neighbouring cards */
+
+.track__letter-corner {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  color: var(--marigold-lo);
+  opacity: .7;
+}
+.track__letter-corner svg { display: block; width: 100%; height: 100%; }
+.track__letter-corner--tl { top: 5px; left: 5px; }
+.track__letter-corner--tr { top: 5px; right: 5px; transform: scaleX(-1); }
+.track__letter-corner--bl { bottom: 5px; left: 5px; transform: scaleY(-1); }
+.track__letter-corner--br { bottom: 5px; right: 5px; transform: scale(-1); }
+
+.track__letter-icon { width: 30px; height: 30px; color: var(--seal, var(--brick)); }
+.track__letter-tag {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--seal, var(--brick));
+}
+.track__letter-rule {
+  width: 70%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--marigold-lo), transparent);
+}
+.track__plate {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--on-paper);
+  line-height: 1.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track__flap, .track__wax, .track__letter { transition-duration: .01ms; }
+  .track__wax-icon { animation: none; }
 }
 
 .hack__cta {

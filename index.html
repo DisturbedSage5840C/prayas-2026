@@ -49,6 +49,35 @@
       <path d="M21.5 21.5c3-4.6 7.7-6.4 11.4-5.2-1.2 3.8-3 8.3-7.6 11"/>
       <circle cx="16.6" cy="16.6" r="1.8" fill="currentColor" stroke="none"/>
     </g>
+
+    <!-- Wax-seal mandala for the sealed track envelopes below. Drawn once at
+         currentColor so each seal can tint it independently. -->
+    <g id="trackSeal" fill="none" stroke="currentColor" stroke-width="1.1">
+      <circle cx="20" cy="20" r="14" opacity=".5"/>
+      <circle cx="20" cy="20" r="9.6" opacity=".85"/>
+      <g fill="currentColor" stroke="none">
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(45 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(90 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(135 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(180 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(225 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(270 20 20)"/>
+        <path d="M20 6 Q22.6 11.6 20 16.4 Q17.4 11.6 20 6Z" transform="rotate(315 20 20)"/>
+      </g>
+      <circle cx="20" cy="20" r="3.6" fill="currentColor" stroke="none"/>
+    </g>
+
+    <!-- Jaali lattice for the envelope stock below — a diamond trellis with a
+         circuit-node dot at each crossing, tiled once as a pattern rather
+         than drawn per envelope. -->
+    <pattern id="trackJaali" width="34" height="34" patternUnits="userSpaceOnUse">
+      <g fill="none" style="stroke: var(--marigold-lo)" stroke-width="1" stroke-opacity=".55">
+        <path d="M17 0 L34 17 L17 34 L0 17 Z"/>
+        <circle cx="17" cy="17" r="3"/>
+        <path d="M17 4 L17 -4 M17 30 L17 38 M4 17 L-4 17 M30 17 L38 17"/>
+      </g>
+    </pattern>
   </defs>
 </svg>
 
@@ -332,10 +361,142 @@
       <div class="block">
         <h3 class="block__label">Four tracks <span class="dot">&middot;</span> sealed until day one</h3>
         <div class="grid grid--four">
-          <div class="track"><p class="track__n">01</p><p class="track__plate" aria-label="Track name hidden until the day of the event"><span aria-hidden="true">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;&#9608;</span></p><p class="track__state">Revealed on the day</p></div>
-          <div class="track"><p class="track__n">02</p><p class="track__plate" aria-label="Track name hidden until the day of the event"><span aria-hidden="true">&#9608;&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span></p><p class="track__state">Revealed on the day</p></div>
-          <div class="track"><p class="track__n">03</p><p class="track__plate" aria-label="Track name hidden until the day of the event"><span aria-hidden="true">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;</span></p><p class="track__state">Revealed on the day</p></div>
-          <div class="track"><p class="track__n">04</p><p class="track__plate" aria-label="Track name hidden until the day of the event"><span aria-hidden="true">&#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span></p><p class="track__state">Revealed on the day</p></div>
+          <div class="track">
+            <p class="track__n">01</p>
+            <div class="track__stage">
+              <div class="track__letter" id="track-letter-01">
+                <span class="track__letter-corner track__letter-corner--tl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--tr" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--bl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--br" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
+                <p class="track__letter-tag">Track 01</p>
+                <span class="track__letter-rule" aria-hidden="true"></span>
+                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+              </div>
+              <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-01">
+                <span class="track__pocket" aria-hidden="true">
+                  <svg class="track__jaali" viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="url(#trackJaali)"/></svg>
+                  <svg class="track__seam" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 42 L50 100 L100 42"/></svg>
+                  <span class="track__dot track__dot--tl"></span>
+                  <span class="track__dot track__dot--tr"></span>
+                  <span class="track__dot track__dot--bl"></span>
+                  <span class="track__dot track__dot--br"></span>
+                </span>
+                <span class="track__flap" aria-hidden="true">
+                  <svg class="track__flap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path class="track__flap-line" d="M0 0 L100 0 L50 100 Z"/>
+                    <path class="track__flap-line track__flap-line--accent" d="M4 2 L96 2 L50 92 Z"/>
+                  </svg>
+                </span>
+                <span class="track__wax" aria-hidden="true"><svg class="track__wax-icon" viewBox="0 0 40 40" focusable="false"><use href="#trackSeal"/></svg></span>
+                <span class="sr-only">Break the seal on track 01</span>
+                <p class="track__cta" aria-hidden="true">Break the seal</p>
+              </button>
+            </div>
+          </div>
+          <div class="track">
+            <p class="track__n">02</p>
+            <div class="track__stage">
+              <div class="track__letter" id="track-letter-02">
+                <span class="track__letter-corner track__letter-corner--tl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--tr" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--bl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--br" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
+                <p class="track__letter-tag">Track 02</p>
+                <span class="track__letter-rule" aria-hidden="true"></span>
+                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+              </div>
+              <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-02">
+                <span class="track__pocket" aria-hidden="true">
+                  <svg class="track__jaali" viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="url(#trackJaali)"/></svg>
+                  <svg class="track__seam" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 42 L50 100 L100 42"/></svg>
+                  <span class="track__dot track__dot--tl"></span>
+                  <span class="track__dot track__dot--tr"></span>
+                  <span class="track__dot track__dot--bl"></span>
+                  <span class="track__dot track__dot--br"></span>
+                </span>
+                <span class="track__flap" aria-hidden="true">
+                  <svg class="track__flap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path class="track__flap-line" d="M0 0 L100 0 L50 100 Z"/>
+                    <path class="track__flap-line track__flap-line--accent" d="M4 2 L96 2 L50 92 Z"/>
+                  </svg>
+                </span>
+                <span class="track__wax" aria-hidden="true"><svg class="track__wax-icon" viewBox="0 0 40 40" focusable="false"><use href="#trackSeal"/></svg></span>
+                <span class="sr-only">Break the seal on track 02</span>
+                <p class="track__cta" aria-hidden="true">Break the seal</p>
+              </button>
+            </div>
+          </div>
+          <div class="track">
+            <p class="track__n">03</p>
+            <div class="track__stage">
+              <div class="track__letter" id="track-letter-03">
+                <span class="track__letter-corner track__letter-corner--tl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--tr" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--bl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--br" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
+                <p class="track__letter-tag">Track 03</p>
+                <span class="track__letter-rule" aria-hidden="true"></span>
+                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+              </div>
+              <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-03">
+                <span class="track__pocket" aria-hidden="true">
+                  <svg class="track__jaali" viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="url(#trackJaali)"/></svg>
+                  <svg class="track__seam" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 42 L50 100 L100 42"/></svg>
+                  <span class="track__dot track__dot--tl"></span>
+                  <span class="track__dot track__dot--tr"></span>
+                  <span class="track__dot track__dot--bl"></span>
+                  <span class="track__dot track__dot--br"></span>
+                </span>
+                <span class="track__flap" aria-hidden="true">
+                  <svg class="track__flap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path class="track__flap-line" d="M0 0 L100 0 L50 100 Z"/>
+                    <path class="track__flap-line track__flap-line--accent" d="M4 2 L96 2 L50 92 Z"/>
+                  </svg>
+                </span>
+                <span class="track__wax" aria-hidden="true"><svg class="track__wax-icon" viewBox="0 0 40 40" focusable="false"><use href="#trackSeal"/></svg></span>
+                <span class="sr-only">Break the seal on track 03</span>
+                <p class="track__cta" aria-hidden="true">Break the seal</p>
+              </button>
+            </div>
+          </div>
+          <div class="track">
+            <p class="track__n">04</p>
+            <div class="track__stage">
+              <div class="track__letter" id="track-letter-04">
+                <span class="track__letter-corner track__letter-corner--tl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--tr" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--bl" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <span class="track__letter-corner track__letter-corner--br" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><use href="#cornerOrn"/></svg></span>
+                <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
+                <p class="track__letter-tag">Track 04</p>
+                <span class="track__letter-rule" aria-hidden="true"></span>
+                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+              </div>
+              <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-04">
+                <span class="track__pocket" aria-hidden="true">
+                  <svg class="track__jaali" viewBox="0 0 100 100" preserveAspectRatio="none"><rect width="100" height="100" fill="url(#trackJaali)"/></svg>
+                  <svg class="track__seam" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 42 L50 100 L100 42"/></svg>
+                  <span class="track__dot track__dot--tl"></span>
+                  <span class="track__dot track__dot--tr"></span>
+                  <span class="track__dot track__dot--bl"></span>
+                  <span class="track__dot track__dot--br"></span>
+                </span>
+                <span class="track__flap" aria-hidden="true">
+                  <svg class="track__flap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path class="track__flap-line" d="M0 0 L100 0 L50 100 Z"/>
+                    <path class="track__flap-line track__flap-line--accent" d="M4 2 L96 2 L50 92 Z"/>
+                  </svg>
+                </span>
+                <span class="track__wax" aria-hidden="true"><svg class="track__wax-icon" viewBox="0 0 40 40" focusable="false"><use href="#trackSeal"/></svg></span>
+                <span class="sr-only">Break the seal on track 04</span>
+                <p class="track__cta" aria-hidden="true">Break the seal</p>
+              </button>
+            </div>
+          </div>
         </div>
         <p class="block__note">Each track centres on a different problem space. Detailed descriptions and problem statements drop on the day of the event.</p>
       </div>
@@ -395,5 +556,6 @@
 </main>
 
 <script src="js/prayas.js"></script>
+<script src="js/track-envelope.js"></script>
 </body>
 </html>
