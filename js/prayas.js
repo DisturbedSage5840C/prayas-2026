@@ -25,6 +25,26 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+  /* ---- diagnostics ------------------------------------------------------
+     A handful of property writes, always on — cheap enough not to matter.
+     The visible overlay only builds when the page carries ?dbg in the URL,
+     so this has no footprint for a normal visitor. It exists because a
+     phone that behaves differently from anything reachable while building
+     this needs to be read directly, without remote debugging tools. */
+  var DEBUG = { ua: navigator.userAgent, log: [] };
+  window.__prayasDebug = DEBUG;
+  var DEBUG_ON = /[?&]dbg(=1)?(&|$)/.test(location.search);
+
+  (function mirrorConsoleInfo() {
+    var real = window.console && console.info;
+    if (!real) return;
+    console.info = function () {
+      DEBUG.log.push([].join.call(arguments, " "));
+      if (DEBUG.log.length > 14) DEBUG.log.shift();
+      real.apply(console, arguments);
+    };
+  })();
+
   var CONFIG = {
     // Seconds for the smoothed scroll to close ~63% of the gap to the real
     // scroll position. The wireframe used a fixed 0.085-per-frame lerp, which
@@ -282,6 +302,7 @@
     ["pointerdown", "touchstart", "wheel", "keydown"].forEach(function (ev) {
       window.addEventListener(ev, function () {
         gestureSeen = true;
+        DEBUG.firstGesture = ev;
         if (video.src) primeVideo();
       }, { once: true, passive: true });
     });
@@ -371,12 +392,17 @@
     var webm = video.getAttribute("data-webm");
     var mp4 = video.getAttribute("data-mp4");
 
+    var hvcCanPlay = video.canPlayType("video/mp4; codecs=\"hvc1\"");
+    DEBUG.hvcCanPlay = hvcCanPlay;
+
     detectAlphaVideo(function (webmAlphaWorks) {
+      DEBUG.webmAlphaWorks = webmAlphaWorks;
       var src = webmAlphaWorks ? webm : mp4;
 
       // Nothing to fall back to: the poster is already the pre-keyed figure,
       // so leaving src unset is a complete, correct plate — not a blank box.
-      if (!src || (!webmAlphaWorks && !video.canPlayType("video/mp4; codecs=\"hvc1\""))) {
+      if (!src || (!webmAlphaWorks && !hvcCanPlay)) {
+        DEBUG.chosenSrc = "none (holding poster)";
         scrubbingIsDead = true;
         if (window.console && console.info) {
           console.info("[prayas] dancer: no source composites alpha here — holding the poster");
@@ -384,6 +410,7 @@
         return;
       }
 
+      DEBUG.chosenSrc = webmAlphaWorks ? "webm" : "mp4";
       if (window.console && console.info) {
         console.info("[prayas] dancer: " + (webmAlphaWorks ? "VP9/WebM" : "HEVC/MP4") + " alpha");
       }
@@ -418,7 +445,10 @@
       }
       seeking = false;
     });
-    video.addEventListener("error", function () { startLoopFallback("load error", true); });
+    video.addEventListener("error", function () {
+      DEBUG.videoError = video.error && (video.error.code + " " + (video.error.message || ""));
+      startLoopFallback("load error", true);
+    });
 
     primeVideo();
     if (gestureSeen) primeVideo();      // a gesture already went by; use it
@@ -536,11 +566,11 @@
   var tabletQ = window.matchMedia("(max-width: 1024px) and (pointer: coarse)");
 
   function applyPace() {
-    var p = phoneQ.matches  ? CONFIG.pace.phone
-          : tabletQ.matches ? CONFIG.pace.tablet
-          :                   CONFIG.pace.desktop;
+    var bucket = phoneQ.matches ? "phone" : tabletQ.matches ? "tablet" : "desktop";
+    var p = CONFIG.pace[bucket];
     CONFIG.actVh = p.actVh;
     CONFIG.tau = p.tau;
+    DEBUG.pace = bucket + " (actVh " + p.actVh + ")";
   }
 
   /** Size the act: the progress run plus the end hold, both in viewport
@@ -742,6 +772,60 @@
     smoothed = window.scrollY || 0;
     render(clamp01((smoothed - act.offsetTop) / progressSpan()));
     requestAnimationFrame(frame);
+  }
+
+  /* ---- the overlay itself ------------------------------------------------
+     Only built when ?dbg is in the URL. Fixed, tiny, and above everything —
+     meant to be screenshotted from a phone, not to be pretty. */
+  function startDebugOverlay() {
+    var box = document.createElement("pre");
+    box.style.cssText =
+      "position:fixed;left:0;top:0;right:0;z-index:999999;margin:0;" +
+      "max-height:70vh;overflow:auto;padding:8px;" +
+      "background:rgba(0,0,0,.88);color:#7CFC9A;" +
+      "font:10px/1.4 ui-monospace,Menlo,monospace;white-space:pre-wrap;" +
+      "pointer-events:none;";
+    document.body.appendChild(box);
+
+    function line(label, value) { return (label + ":").padEnd(14) + value + "\n"; }
+
+    function tick() {
+      var v = video;
+      var out = "";
+      out += line("ua", DEBUG.ua.slice(-52));
+      out += line("pace", DEBUG.pace || "?");
+      out += line("hvcCanPlay", '"' + (DEBUG.hvcCanPlay || "") + '"');
+      out += line("webmAlpha", String(DEBUG.webmAlphaWorks));
+      out += line("chosenSrc", DEBUG.chosenSrc || "(probe pending)");
+      out += line("firstGesture", DEBUG.firstGesture || "(none yet)");
+      out += line("videoError", DEBUG.videoError || "(none)");
+      out += "\n";
+      if (v) {
+        out += line("currentSrc", (v.currentSrc || "(none)").split("/").pop());
+        out += line("readyState", v.readyState + "  networkState " + v.networkState);
+        out += line("duration", (v.duration || 0).toFixed(2) + "s");
+        out += line("currentTime", v.currentTime.toFixed(3) + "s");
+        out += line("paused/loop", v.paused + " / " + v.loop);
+        out += line("seeking", seeking + "  seekSeen " + seekSeen + "  avg " +
+                     (seekSeen > SEEK_WARMUP ? Math.round(seekTotal / (seekSeen - SEEK_WARMUP)) + "ms" : "n/a"));
+        var seekable = v.seekable;
+        out += line("seekable", seekable.length ? seekable.start(0).toFixed(2) + "-" + seekable.end(0).toFixed(2) : "NONE");
+      } else {
+        out += "(no <video id=dancer> found)\n";
+      }
+      out += line("scrubbingIsDead", String(scrubbingIsDead));
+      out += line("loopFallback", String(loopFallback));
+      out += line("videoReady", String(videoReady));
+      out += "\n--- log ---\n" + DEBUG.log.join("\n");
+      box.textContent = out;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (DEBUG_ON) {
+    if (document.body) startDebugOverlay();
+    else document.addEventListener("DOMContentLoaded", startDebugOverlay);
   }
 
   start();
