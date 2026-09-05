@@ -1250,6 +1250,14 @@ main { position: relative; z-index: 1; }
   .ring { height: 48%; }
   .lockline { bottom: clamp(3rem, 7vh, 5rem); font-size: clamp(1rem, 4vw, 1.3rem); }
 
+  /* The closing line runs to three lines at this width, so its top sits
+     higher than on desktop and was crowding her feet. Lift her a little
+     further and shrink her a touch more as it lands. */
+  :root {
+    --lift-vh: -9.5vh;
+    --lift-k: .11;
+  }
+
   .grid--two, .grid--four { grid-template-columns: 1fr; }
 
   .timeline { grid-template-columns: 1fr; gap: var(--gap-l); }
