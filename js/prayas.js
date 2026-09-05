@@ -165,6 +165,12 @@
     }
   };
 
+  /* Which class of device this is. Read by applyPace() for the scroll length
+     and by selectPlateSource() for which encode to fetch — the two things
+     that have to differ between a thumb and a wheel. */
+  var phoneQ  = window.matchMedia("(max-width: 760px)");
+  var tabletQ = window.matchMedia("(max-width: 1024px) and (pointer: coarse)");
+
   /* -- maths ---------------------------------------------------------------- */
 
   function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -227,18 +233,17 @@
   var loopFallback = false;
   var scrubbingIsDead = false;         // set only by a FATAL fallback
 
-  /* A seek that COMPLETES can still be far too slow to read as dancing. A
-     phone decoding an alpha stream in software retires a seek in a couple of
-     hundred milliseconds, which is four or five new frames a second: she
-     visibly stutters instead of moving, and none of the checks below fire
-     because every seek is technically working. So time them and give up on
-     scrubbing if the decoder cannot keep pace.
+  /* Seek latency is measured for the diagnostics overlay, and for nothing
+     else. An earlier pass used it to drop into looped playback when seeks
+     averaged over 200ms, reasoning that a stutter was worse than a loop. On
+     a phone that reasoning was exactly backwards: she stopped following the
+     scroll at all, which read as the page being broken rather than as a
+     graceful fallback. A slow follow is still a follow. The real cure for
+     slow seeks is in the encode — see assets/README.md — not in giving up.
 
-     The first few are ignored — a cold decoder and a half-filled buffer make
-     the opening seeks slow everywhere, including on desktop. */
-  var SEEK_WARMUP  = 3;      // seeks to discard before judging
-  var SEEK_SAMPLES = 6;      // seeks to average over
-  var SEEK_BUDGET  = 200;    // ms; above this, scrubbing reads as a stutter
+     The first few are still skipped in the average, so a cold decoder does
+     not dominate the figure. */
+  var SEEK_WARMUP = 3;
   var seekSeen = 0;
   var seekTotal = 0;
 
@@ -389,8 +394,13 @@
 
   /** Point the plate at a source this browser will composite, then wire it up. */
   function selectPlateSource(onChosen) {
-    var webm = video.getAttribute("data-webm");
-    var mp4 = video.getAttribute("data-mp4");
+    // A phone gets the half-size, 12fps encode: a quarter of the pixels to
+    // decode per seek, and a third of the bytes over mobile data. It renders
+    // at ~300px wide there, so the smaller frame is not visibly softer.
+    var small = phoneQ.matches;
+    var webm = video.getAttribute(small ? "data-webm-sm" : "data-webm");
+    var mp4 = video.getAttribute(small ? "data-mp4-sm" : "data-mp4");
+    DEBUG.variant = small ? "phone (380x360 @12fps)" : "full (760x720 @24fps)";
 
     var hvcCanPlay = video.canPlayType("video/mp4; codecs=\"hvc1\"");
     DEBUG.hvcCanPlay = hvcCanPlay;
@@ -429,19 +439,7 @@
     video.addEventListener("seeked", function () {
       if (seeking) {
         seekSeen++;
-        if (seekSeen > SEEK_WARMUP) {
-          seekTotal += performance.now() - seekIssuedAt;
-          var judged = seekSeen - SEEK_WARMUP;
-          if (judged >= SEEK_SAMPLES) {
-            var mean = seekTotal / judged;
-            if (mean > SEEK_BUDGET) {
-              startLoopFallback("seeks average " + Math.round(mean) +
-                                "ms — too slow to read as motion", true);
-            }
-            seekSeen = SEEK_WARMUP;      // reset the window and keep watching
-            seekTotal = 0;
-          }
-        }
+        if (seekSeen > SEEK_WARMUP) seekTotal += performance.now() - seekIssuedAt;
       }
       seeking = false;
     });
@@ -562,9 +560,6 @@
   /* Which pacing this viewport gets. Read on every resize, not just at boot,
      so turning a tablet from portrait to landscape re-paces the act instead
      of keeping whatever it booted with. */
-  var phoneQ  = window.matchMedia("(max-width: 760px)");
-  var tabletQ = window.matchMedia("(max-width: 1024px) and (pointer: coarse)");
-
   function applyPace() {
     var bucket = phoneQ.matches ? "phone" : tabletQ.matches ? "tablet" : "desktop";
     var p = CONFIG.pace[bucket];
@@ -794,6 +789,7 @@
       var out = "";
       out += line("ua", DEBUG.ua.slice(-52));
       out += line("pace", DEBUG.pace || "?");
+      out += line("variant", DEBUG.variant || "?");
       out += line("hvcCanPlay", '"' + (DEBUG.hvcCanPlay || "") + '"');
       out += line("webmAlpha", String(DEBUG.webmAlphaWorks));
       out += line("chosenSrc", DEBUG.chosenSrc || "(probe pending)");

@@ -57,7 +57,8 @@ PY
 |---|---|
 | `bg-motif.webp` | The single gold buta motif. Source art for the scatter tile. |
 | `card-frame.webp` | Pattachitra border plate, used via `border-image` on the event cards. |
-| `dancer-alpha.webm` / `.mp4` | The scroll-scrubbed dancer plate, key already baked in. See below. |
+| `dancer-plate-full.webm` / `.mp4` | The scroll-scrubbed plate, 760×720 @ 24fps, keyframe every 3rd frame. Desktop and tablet. |
+| `dancer-plate-sm.webm` / `.mp4` | The same plate at 380×360 @ 12fps, keyframe every 1–2 frames. Phones. |
 | `dancer-plate.webp` | Pre-keyed still, used as the plate's `poster`. |
 | `dancer-scrub.webm` / `.mp4` | **Source only** — the original green-screen plates. Not shipped to the page. |
 | `dancer-poster.jpg` | **Source only** — the original green-screen poster frame. |
@@ -97,19 +98,58 @@ ffmpeg -y -i assets/dancer-scrub.mp4 \
        [a]alphaextract,gblur=sigma=0.5[al];[m][al]alphamerge" \
   -c:v ffv1 -pix_fmt rgba -an keyed.mkv
 
+# ---- full size: desktop and tablet ------------------------------------------
 # VP9 + alpha  — Chrome, Firefox, Edge, Android Chrome
 ffmpeg -y -i keyed.mkv -c:v libvpx-vp9 -pix_fmt yuva420p \
-  -b:v 0 -crf 36 -row-mt 1 -cpu-used 2 -an assets/dancer-alpha.webm
+  -g 3 -keyint_min 3 -b:v 0 -crf 40 -row-mt 1 -cpu-used 2 -an \
+  assets/dancer-plate-full.webm
 
 # HEVC + alpha — Safari and iOS (needs macOS VideoToolbox to encode)
 ffmpeg -y -i keyed.mkv -c:v hevc_videotoolbox -pix_fmt bgra \
-  -alpha_quality 0.8 -b:v 1600k -tag:v hvc1 -an assets/dancer-alpha.mp4
+  -g 3 -alpha_quality 0.75 -b:v 1400k -tag:v hvc1 -an \
+  assets/dancer-plate-full.mp4
+
+# ---- phone: half size, 12fps -------------------------------------------------
+ffmpeg -y -i keyed.mkv -vf "fps=12,scale=380:360:flags=lanczos" \
+  -c:v libvpx-vp9 -pix_fmt yuva420p \
+  -g 2 -keyint_min 2 -b:v 0 -crf 36 -row-mt 1 -cpu-used 2 -an \
+  assets/dancer-plate-sm.webm
+
+ffmpeg -y -i keyed.mkv -vf "fps=12,scale=380:360:flags=lanczos" \
+  -c:v hevc_videotoolbox -pix_fmt bgra \
+  -g 1 -alpha_quality 0.75 -b:v 700k -tag:v hvc1 -an \
+  assets/dancer-plate-sm.mp4
 
 # the poster: the frame the engine parks on, 40% through
 ffmpeg -y -ss 3.4 -i keyed.mkv -frames:v 1 poster.png
 python3 -c "from PIL import Image; \
   Image.open('poster.png').convert('RGBA').save('assets/dancer-plate.webp','WEBP',quality=86,method=6)"
 ```
+
+### The keyframe interval is the whole point
+
+`-g` is not a size knob here, it is what makes scrubbing possible. The plate
+is never played; the engine writes `currentTime` on every scroll frame, and a
+seek has to decode from the nearest keyframe forward. The first encode left
+that at libvpx's default and shipped **2 keyframes in 204 frames**: a seek
+could mean decoding a hundred alpha frames in software before showing one,
+which on a phone was hundreds of milliseconds per scroll step. She could not
+follow the scroll, so she fell back to looping — and looping is what a
+visitor reads as "broken".
+
+Every frame a keyframe (`-g 1`) fixes that outright but costs ~8 MB at full
+size, so the encodes above split the difference: a seek decodes at most two
+extra frames at full size, and at most one on the phone variant. The phone
+variant also halves the resolution and the frame rate — a quarter of the
+pixels per seek, and 102 scrub steps across ~4.6 screens is still ~22 per
+screen. It renders at ~300px wide there, so the smaller frame is not softer.
+
+### Rename on every re-encode
+
+`/assets/*` is served `immutable, max-age=1y` (see `vercel.json`). Overwriting
+an encode under its existing name leaves every returning visitor on the old
+file for a year. New content, new filename, then update the `data-*`
+attributes on the `<video>` in `index.html`.
 
 `gblur=sigma=0.5` on the alpha plane alone stands in for the old
 `feGaussianBlur` + `feComposite operator="in"` pair, which existed to
@@ -128,7 +168,8 @@ differently:
 | Chrome 151 | `"probably"` — alpha honoured | `""` |
 
 Handing Safari the WebM therefore produces an opaque plate with no error to
-catch. `selectPlateSource()` in `js/prayas.js` decodes a 625-byte inline probe
+catch. `selectPlateSource()` in `js/prayas.js` picks the phone or full-size pair
+by viewport, then decodes a 625-byte inline probe
 clip whose right half is fully transparent, reads the alpha back off a canvas,
 and picks the source that actually composites. Until it answers — and
 permanently, if neither source works or scripting is off — the `poster` holds
