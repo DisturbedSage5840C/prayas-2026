@@ -220,15 +220,22 @@
              opaque box. js/prayas.js probes for real alpha compositing and
              sets `src` to whichever of these the browser actually honours.
 
+             On a touch device none of that happens: seeking a paused video on
+             Android Chrome is slow and often does not repaint, so the engine
+             never gives this element a source there and scrubs the frame
+             sequence in data-frames on a <canvas> instead (see js/prayas.js).
+
              Until then — and forever, if neither works or JS never runs — the
              poster stands in. It is the same figure, pre-keyed, so the plate
              is correct on first paint everywhere rather than merely eventually. -->
-        <video class="dancer__plate" id="dancer" poster="assets/dancer-plate.webp"
+        <video class="dancer__plate" id="dancer" poster="assets/dancer-plate-v2.webp"
                muted playsinline preload="none" disablepictureinpicture disableremoteplayback
-               data-webm="assets/dancer-plate-full.webm"
-               data-mp4="assets/dancer-plate-full.mp4"
-               data-webm-sm="assets/dancer-plate-sm.webm"
-               data-mp4-sm="assets/dancer-plate-sm.mp4"></video>
+               data-webm="assets/dancer-plate-full-v2.webm"
+               data-mp4="assets/dancer-plate-full-v2.mp4"
+               data-webm-sm="assets/dancer-plate-sm-v2.webm"
+               data-mp4-sm="assets/dancer-plate-sm-v2.mp4"
+               data-frames="assets/dancer-frames-v2/"
+               data-frame-count="72"></video>
       </div>
 
       <!-- ---------- Event 01 ---------- -->

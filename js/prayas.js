@@ -473,7 +473,117 @@
     }, 1000);
   }
 
-  if (video) selectPlateSource(wirePlate);
+  /* ==========================================================================
+     Touch devices: scrub a frame sequence, not a video
+
+     Every version of the plate that scrubbed a <video> by writing currentTime
+     froze or stuttered on a real Android Chrome phone, while the identical
+     files scrubbed cleanly in Safari and Chrome on a laptop. She could PLAY
+     there — the loop fallback worked — she just could not be SEEKED: seeking a
+     paused, hardware-decoded video on Android is slow, and often does not
+     repaint the frame at all. No encode fixes that; the video pipeline is the
+     problem. So on a touch device the video is never given a source. The same
+     plate is a sequence of alpha WebP stills drawn onto a <canvas> instead —
+     plain image compositing, which behaves identically everywhere.
+
+     The canvas takes the .dancer__plate class, so it inherits the video's
+     position, sizing, object-fit, glow and entrance animation unchanged.
+
+     Frames load from the top of the act downward, a few in flight at a time,
+     with whichever frame the scroll currently wants pulled to the front of the
+     queue. Until a frame has arrived the nearest loaded one is drawn, so she
+     trails the scroll for a moment on a slow connection rather than vanishing.
+     ====================================================================== */
+
+  var FRAMES_ON = !!video && (
+    window.matchMedia("(pointer: coarse)").matches ||
+    /[?&]plate=frames(&|$)/.test(location.search)     // force, for testing on a laptop
+  );
+  var frames = null;
+
+  function startFrames() {
+    if (reduceMotion.matches) {
+      // CSS parks the layout and the poster already shows her at rest.
+      DEBUG.mode = "frames skipped (reduced motion) — poster";
+      return;
+    }
+    var base  = video.getAttribute("data-frames") || "assets/dancer-frames-v2/";
+    var count = parseInt(video.getAttribute("data-frame-count"), 10) || 72;
+
+    var canvas = document.createElement("canvas");
+    canvas.className = "dancer__plate dancer__plate--frames";
+    canvas.setAttribute("aria-hidden", "true");
+    var ctx = canvas.getContext("2d");
+
+    frames = { count: count, imgs: [], state: [], loaded: 0, want: 0, drawn: -1, canvas: canvas };
+    for (var i = 0; i < count; i++) frames.state[i] = 0;   // 0 none · 1 loading · 2 ready
+    DEBUG.mode = "frames";
+
+    var inflight = 0, next = 0, MAX_INFLIGHT = 3, swapped = false;
+
+    function pad(i) { return (i < 10 ? "0" : "") + i; }
+
+    function load(i) {
+      frames.state[i] = 1;
+      inflight++;
+      var img = new Image();
+      img.decoding = "async";
+      img.onload = function () {
+        inflight--;
+        frames.state[i] = 2;
+        frames.loaded++;
+        if (!swapped) {
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          video.style.display = "none";
+          video.parentNode.insertBefore(canvas, video.nextSibling);
+          swapped = true;
+        }
+        redraw();
+        pump();
+      };
+      img.onerror = function () { inflight--; frames.state[i] = 0; pump(); };
+      img.src = base + "f" + pad(i) + ".webp";
+      frames.imgs[i] = img;
+    }
+
+    function pump() {
+      // The frame the scroll is asking for jumps the queue.
+      if (frames.state[frames.want] === 0 && inflight < MAX_INFLIGHT) load(frames.want);
+      while (inflight < MAX_INFLIGHT && next < count) {
+        if (frames.state[next] === 0) load(next);
+        next++;
+      }
+    }
+
+    function redraw() {
+      var w = frames.want, i = -1;
+      if (frames.state[w] === 2) i = w;
+      else {
+        for (var d = 1; d < count && i < 0; d++) {
+          if (w - d >= 0    && frames.state[w - d] === 2) i = w - d;
+          else if (w + d < count && frames.state[w + d] === 2) i = w + d;
+        }
+      }
+      if (i < 0 || i === frames.drawn) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frames.imgs[i], 0, 0);
+      frames.drawn = i;
+    }
+
+    frames.scrub = function (p) {
+      var w = Math.round(p * (count - 1));
+      if (w !== frames.want) { frames.want = w; pump(); }
+      redraw();
+    };
+
+    pump();
+  }
+
+  if (video) {
+    if (FRAMES_ON) startFrames();
+    else selectPlateSource(wirePlate);
+  }
 
   /* -- state ---------------------------------------------------------------- */
 
@@ -590,6 +700,7 @@
   }
 
   function scrubTo(p) {
+    if (frames) { frames.scrub(p); return; }
     if (!videoReady || loopFallback) return;
 
     /* A host that does not serve byte ranges looks like THIS from in here:
@@ -789,6 +900,8 @@
       var out = "";
       out += line("ua", DEBUG.ua.slice(-52));
       out += line("pace", DEBUG.pace || "?");
+      out += line("mode", DEBUG.mode || "video");
+      if (frames) out += line("frames", frames.loaded + "/" + frames.count + " loaded, want " + frames.want + ", drawn " + frames.drawn);
       out += line("variant", DEBUG.variant || "?");
       out += line("hvcCanPlay", '"' + (DEBUG.hvcCanPlay || "") + '"');
       out += line("webmAlpha", String(DEBUG.webmAlphaWorks));

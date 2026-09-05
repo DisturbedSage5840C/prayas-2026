@@ -57,9 +57,10 @@ PY
 |---|---|
 | `bg-motif.webp` | The single gold buta motif. Source art for the scatter tile. |
 | `card-frame.webp` | Pattachitra border plate, used via `border-image` on the event cards. |
-| `dancer-plate-full.webm` / `.mp4` | The scroll-scrubbed plate, 760×720 @ 24fps, keyframe every 3rd frame. Desktop and tablet. |
-| `dancer-plate-sm.webm` / `.mp4` | The same plate at 380×360 @ 12fps, keyframe every 1–2 frames. Phones. |
-| `dancer-plate.webp` | Pre-keyed still, used as the plate's `poster`. |
+| `dancer-plate-full-v2.webm` / `.mp4` | The scroll-scrubbed plate, 760×720 @ 24fps, keyframe every 3rd frame. Desktop and tablet. |
+| `dancer-plate-sm-v2.webm` / `.mp4` | The same plate at 380×360 @ 12fps, keyframe every 1–2 frames. Phones. |
+| `dancer-plate-v2.webp` | Pre-keyed still, used as the plate's `poster`. |
+| `dancer-frames-v2/f00–f71.webp` | The plate as 72 alpha stills, 380×360. What touch devices scrub, on a canvas. |
 | `dancer-scrub.webm` / `.mp4` | **Source only** — the original green-screen plates. Not shipped to the page. |
 | `dancer-poster.jpg` | **Source only** — the original green-screen poster frame. |
 | `prayas-logo.svg` | The wordmark. |
@@ -87,14 +88,21 @@ rather than per frame: the RGB rows are the colour grade (with the old
 same greenness key, `a = 1.6 + 2R - 4G + 2B`, scaled to 0-255 (`1.6 * 255 = 408`).
 
 ```bash
-K="clip(408 + 2*r(X,Y) - 4*g(X,Y) + 2*b(X,Y),0,255)"
-R="clip(1.70*r(X,Y) - 0.40*g(X,Y) - 0.30*b(X,Y),0,255)"
-G="clip(0.246*r(X,Y) + 0.369*g(X,Y) + 0.0984*b(X,Y),0,255)"
-B="clip(0.85*r(X,Y) - 0.15*g(X,Y) + 0.30*b(X,Y),0,255)"
+# Despill: the grade reads a green clamped to max(R,B), so screen spill on
+# her outline cannot tint it. Alpha still keys on the ORIGINAL greenness, then
+# the soft edge is pulled in a touch ((a-40)*1.25). Finally the RGB under fully
+# transparent pixels is filled with her own tone, so chroma subsampling in the
+# video encodes has no green to smear into the edge.
+D="min(g(X,Y),max(r(X,Y),b(X,Y)))"
+K="clip((408 + 2*r(X,Y) - 4*g(X,Y) + 2*b(X,Y) - 40)*1.25,0,255)"
+R="clip(1.70*r(X,Y) - 0.40*($D) - 0.30*b(X,Y),0,255)"
+G="clip(0.246*r(X,Y) + 0.369*($D) + 0.0984*b(X,Y),0,255)"
+B="clip(0.85*r(X,Y) - 0.15*($D) + 0.30*b(X,Y),0,255)"
+FILL="geq=r='if(lt(alpha(X,Y),6),196,r(X,Y))':g='if(lt(alpha(X,Y),6),58,g(X,Y))':b='if(lt(alpha(X,Y),6),128,b(X,Y))':a='alpha(X,Y)'"
 
-# key once into a lossless RGBA intermediate, then encode twice off that
+# key once into a lossless RGBA intermediate, then encode everything off that
 ffmpeg -y -i assets/dancer-scrub.mp4 \
-  -vf "format=rgba,geq=r='$R':g='$G':b='$B':a='$K',split[m][a];\
+  -vf "format=rgba,geq=r='$R':g='$G':b='$B':a='$K',$FILL,split[m][a];\
        [a]alphaextract,gblur=sigma=0.5[al];[m][al]alphamerge" \
   -c:v ffv1 -pix_fmt rgba -an keyed.mkv
 
@@ -102,28 +110,28 @@ ffmpeg -y -i assets/dancer-scrub.mp4 \
 # VP9 + alpha  — Chrome, Firefox, Edge, Android Chrome
 ffmpeg -y -i keyed.mkv -c:v libvpx-vp9 -pix_fmt yuva420p \
   -g 3 -keyint_min 3 -b:v 0 -crf 40 -row-mt 1 -cpu-used 2 -an \
-  assets/dancer-plate-full.webm
+  assets/dancer-plate-full-v2.webm
 
 # HEVC + alpha — Safari and iOS (needs macOS VideoToolbox to encode)
 ffmpeg -y -i keyed.mkv -c:v hevc_videotoolbox -pix_fmt bgra \
   -g 3 -alpha_quality 0.75 -b:v 1400k -tag:v hvc1 -an \
-  assets/dancer-plate-full.mp4
+  assets/dancer-plate-full-v2.mp4
 
 # ---- phone: half size, 12fps -------------------------------------------------
 ffmpeg -y -i keyed.mkv -vf "fps=12,scale=380:360:flags=lanczos" \
   -c:v libvpx-vp9 -pix_fmt yuva420p \
   -g 2 -keyint_min 2 -b:v 0 -crf 36 -row-mt 1 -cpu-used 2 -an \
-  assets/dancer-plate-sm.webm
+  assets/dancer-plate-sm-v2.webm
 
 ffmpeg -y -i keyed.mkv -vf "fps=12,scale=380:360:flags=lanczos" \
   -c:v hevc_videotoolbox -pix_fmt bgra \
   -g 1 -alpha_quality 0.75 -b:v 700k -tag:v hvc1 -an \
-  assets/dancer-plate-sm.mp4
+  assets/dancer-plate-sm-v2.mp4
 
 # the poster: the frame the engine parks on, 40% through
 ffmpeg -y -ss 3.4 -i keyed.mkv -frames:v 1 poster.png
 python3 -c "from PIL import Image; \
-  Image.open('poster.png').convert('RGBA').save('assets/dancer-plate.webp','WEBP',quality=86,method=6)"
+  Image.open('poster.png').convert('RGBA').save('assets/dancer-plate-v2.webp','WEBP',quality=86,method=6)"
 ```
 
 ### The keyframe interval is the whole point
@@ -143,6 +151,31 @@ extra frames at full size, and at most one on the phone variant. The phone
 variant also halves the resolution and the frame rate — a quarter of the
 pixels per seek, and 102 scrub steps across ~4.6 screens is still ~22 per
 screen. It renders at ~300px wide there, so the smaller frame is not softer.
+
+### Touch devices do not get the video at all
+
+Every version that scrubbed the `<video>` by writing `currentTime` froze or
+stuttered on a real Android Chrome phone, while the same files scrubbed
+cleanly in Safari and Chrome on a laptop. She could *play* there — the loop
+fallback worked — she just could not be *seeked*: seeking a paused,
+hardware-decoded video on Android is slow and often does not repaint the
+frame. No encode fixes that.
+
+So on `(pointer: coarse)` the video is never given a source. The engine draws
+`dancer-frames/` onto a `<canvas>` instead — plain image compositing, which
+behaves the same everywhere. 72 frames is one per ~50px of scroll on a phone.
+
+```bash
+mkdir -p frames && ffmpeg -y -i keyed.mkv \
+  -vf "fps=72/8.5,scale=380:360:flags=lanczos" frames/f%03d.png
+python3 -c "
+from PIL import Image; import glob
+for i,f in enumerate(sorted(glob.glob('frames/f*.png'))):
+    Image.open(f).convert('RGBA').save(f'assets/dancer-frames-v2/f{i:02d}.webp','WEBP',quality=78,method=6)
+"
+```
+
+Append `?plate=frames` to the URL to force this path on a laptop.
 
 ### Rename on every re-encode
 
