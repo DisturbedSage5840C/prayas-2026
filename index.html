@@ -20,7 +20,7 @@
      ============================================================ -->
 <svg class="defs" aria-hidden="true" focusable="false">
   <defs>
-    <!-- Corner ornament for the hackathon block. Drawn once, placed four
+    <!-- Corner ornament for the sealed track letters. Drawn once, placed four
          times and rotated. A double bracket with a small buta at the elbow,
          so it echoes the emblems in the field behind rather than reading as
          a generic corner rule. -->
@@ -323,14 +323,6 @@
 
     <div class="hack__inner">
 
-      <!-- Marks the corners of the content block, not the browser edges — at
-           the section's own edges these would float away from the content on
-           a wide monitor. -->
-      <svg class="corner corner--tl" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--tr" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--br" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-      <svg class="corner corner--bl" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#cornerOrn"/></svg>
-
       <div class="hack__head">
         <div class="hack__headline">
           <p class="hack__eyebrow">Event 03 <span class="dot">&middot;</span> The finale</p>
@@ -509,9 +501,14 @@
 
       <div class="hack__cta">
         <p class="hack__ctatext">Round 1 open now &mdash; inter-college teams of 3&ndash;4, BTech years 1 to 4.</p>
-        <a class="btn btn--lg" href="https://unstop.com/hackathons/prayas-tech-hackathon-prayas-tech-fest-at-plaksha-university-plaksha-univeristy-1742156?lb=useV1rAd&amp;utm_medium=Share&amp;utm_source=online_coding_challenge&amp;utm_campaign=Wuqctjpr86903" target="_blank" rel="noopener">
-          Register on Unstop <span class="btn__arrow" aria-hidden="true">&rarr;</span>
-        </a>
+        <div class="hack__ctaactions">
+          <button class="btn btn--lg btn--ghost" type="button" data-brochure-open aria-haspopup="dialog">
+            View brochure <span class="btn__arrow" aria-hidden="true">&darr;</span>
+          </button>
+          <a class="btn btn--lg" href="https://unstop.com/hackathons/prayas-tech-hackathon-prayas-tech-fest-at-plaksha-university-plaksha-univeristy-1742156?lb=useV1rAd&amp;utm_medium=Share&amp;utm_source=online_coding_challenge&amp;utm_campaign=Wuqctjpr86903" target="_blank" rel="noopener">
+            Register on Unstop <span class="btn__arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
       </div>
 
     </div>
@@ -570,7 +567,37 @@
 
 </main>
 
+<!-- ============================================================
+     Brochure preview — same illustrated plate as the event
+     cards over the pinned stage. Opens from the hackathon CTA;
+     shows the cover and hands off the full PDF.
+     ============================================================ -->
+<dialog class="brochure" id="brochure" aria-labelledby="brochure-title">
+  <article class="brochure__card card card--one">
+    <div class="card__frame">
+      <div class="card__body">
+        <button class="brochure__close" type="button" data-brochure-close aria-label="Close brochure preview">&times;</button>
+
+        <p class="card__index"><span>Prayas &rsquo;26</span> Brochure</p>
+        <h2 class="card__title" id="brochure-title">The full brief</h2>
+        <p class="card__kicker">Events, tracks, timeline and prizes &mdash; one document</p>
+
+        <figure class="brochure__preview">
+          <img src="assets/prayas-brochure-cover.jpg" width="989" height="1400"
+               alt="Cover page of the Prayas &rsquo;26 brochure" loading="lazy" decoding="async">
+          <figcaption>Page 1 of the brochure</figcaption>
+        </figure>
+
+        <a class="btn" href="assets/prayas-brochure.pdf" download="Prayas-26-Brochure.pdf">
+          Download PDF <span class="btn__arrow" aria-hidden="true">&darr;</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</dialog>
+
 <script src="js/prayas.js"></script>
 <script src="js/track-envelope.js"></script>
+<script src="js/brochure.js"></script>
 </body>
 </html>
