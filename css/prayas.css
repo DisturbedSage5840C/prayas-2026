@@ -655,6 +655,8 @@ main { position: relative; z-index: 1; }
    crimson — the one place crimson is used as a fill rather than an accent. */
 .card .btn { background: var(--crimson); color: var(--paper); align-self: center; }
 .card .btn:hover { background: var(--brick); color: var(--paper); box-shadow: 0 8px 22px rgba(170, 41, 90, .34); }
+.card .btn--disabled,
+.card .btn--disabled:hover { background: var(--on-paper-2); }
 
 /* ============================================================================
    Buttons
@@ -689,6 +691,17 @@ main { position: relative; z-index: 1; }
 .btn:hover .btn__arrow { transform: translateX(3px); }
 
 .btn--lg { padding: .95em 2.1em; font-size: var(--t-body); letter-spacing: .1em; }
+
+.btn--disabled,
+.btn--disabled:hover {
+  background: var(--on-paper-2);
+  color: var(--paper);
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  pointer-events: none;
+}
 
 /* ============================================================================
    ACT TWO — the hackathon
