@@ -692,6 +692,17 @@ main { position: relative; z-index: 1; }
 
 .btn--lg { padding: .95em 2.1em; font-size: var(--t-body); letter-spacing: .1em; }
 
+.btn--disabled,
+.btn--disabled:hover {
+  background: var(--on-paper-2);
+  color: var(--paper);
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
 /* Outlined companion to the solid marigold CTA — used where a secondary
    action sits next to Register (the brochure preview) and should not
    compete with it for the eye. */
