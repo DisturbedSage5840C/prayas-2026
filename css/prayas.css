@@ -805,6 +805,97 @@ main { position: relative; z-index: 1; }
 }
 
 /* ============================================================================
+   Track details modal
+
+   Plain dark dialog rather than the brochure's illustrated plate — this is
+   read, not admired, so it stays a text panel: kicker, name, the guiding
+   questions as a list, one shared note for the prize/shortlist mechanics
+   that are the same across all four tracks.
+   ========================================================================= */
+
+.trackdetails {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  width: min(92vw, 46ch);
+  max-height: 84vh;
+  overflow: visible;
+  background: transparent;
+}
+.trackdetails::backdrop {
+  background: rgba(6, 6, 9, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.trackdetails__card {
+  position: relative;
+  max-height: 84vh;
+  overflow-y: auto;
+  padding: var(--gap-l) var(--gap-m);
+  background: var(--ink-sunk);
+  color: var(--ice-70);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+
+.trackdetails__close {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-xs);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ice-55);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.trackdetails__close:hover,
+.trackdetails__close:focus-visible { color: var(--ice); background: var(--line); }
+
+.trackdetails__kicker {
+  margin: 0 0 .3rem;
+  font-size: var(--t-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.trackdetails__title {
+  margin: 0 0 var(--gap-s);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--ice);
+  padding-right: 2rem;
+}
+.trackdetails__questions {
+  margin: 0 0 var(--gap-m);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+}
+.trackdetails__note {
+  margin: 0;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
+  font-size: var(--t-label);
+  color: var(--ice-38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackdetails__close { transition: none; }
+}
+
+/* ============================================================================
    ACT TWO — the hackathon
    ========================================================================= */
 
@@ -1246,6 +1337,26 @@ main { position: relative; z-index: 1; }
   color: var(--on-paper);
   line-height: 1.25;
 }
+
+/* The one interactive control inside the paper letter — sits below the
+   revealed name, styled as fine print rather than a full button so it
+   doesn't compete with the reveal itself. */
+.track__details {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: var(--seal, var(--brick));
+  background: none;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+  transition: opacity .15s ease;
+}
+.track__details:hover,
+.track__details:focus-visible { opacity: .7; }
 
 @media (prefers-reduced-motion: reduce) {
   .track__flap, .track__wax, .track__letter { transition-duration: .01ms; }

@@ -372,7 +372,8 @@
                 <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
                 <p class="track__letter-tag">Track 01</p>
                 <span class="track__letter-rule" aria-hidden="true"></span>
-                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+                <p class="track__plate">Open Innovation</p>
+                <button type="button" class="track__details" data-track-details="01">Track details</button>
               </div>
               <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-01">
                 <span class="track__pocket" aria-hidden="true">
@@ -406,7 +407,8 @@
                 <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
                 <p class="track__letter-tag">Track 02</p>
                 <span class="track__letter-rule" aria-hidden="true"></span>
-                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+                <p class="track__plate">Urban Planning</p>
+                <button type="button" class="track__details" data-track-details="02">Track details</button>
               </div>
               <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-02">
                 <span class="track__pocket" aria-hidden="true">
@@ -440,7 +442,8 @@
                 <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
                 <p class="track__letter-tag">Track 03</p>
                 <span class="track__letter-rule" aria-hidden="true"></span>
-                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+                <p class="track__plate">Future Finance</p>
+                <button type="button" class="track__details" data-track-details="03">Track details</button>
               </div>
               <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-03">
                 <span class="track__pocket" aria-hidden="true">
@@ -474,7 +477,8 @@
                 <svg class="track__letter-icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="#trackSeal"/></svg>
                 <p class="track__letter-tag">Track 04</p>
                 <span class="track__letter-rule" aria-hidden="true"></span>
-                <p class="track__plate" aria-label="Track name hidden until the day of the event">Revealed on the day</p>
+                <p class="track__plate">Medical Diagnostics</p>
+                <button type="button" class="track__details" data-track-details="04">Track details</button>
               </div>
               <button class="track__env" type="button" aria-expanded="false" aria-controls="track-letter-04">
                 <span class="track__pocket" aria-hidden="true">
@@ -589,8 +593,24 @@
   </article>
 </dialog>
 
+<!-- ============================================================
+     Track details — one shared dialog, content swapped in per
+     track by js/track-details.js when a "Track details" trigger
+     inside a broken seal is clicked.
+     ============================================================ -->
+<dialog class="trackdetails" id="trackDetails" aria-labelledby="trackdetails-title">
+  <div class="trackdetails__card">
+    <button type="button" class="trackdetails__close" data-trackdetails-close aria-label="Close track details">&times;</button>
+    <p class="trackdetails__kicker">Hackathon track</p>
+    <h2 class="trackdetails__title" id="trackdetails-title"></h2>
+    <ul class="trackdetails__questions"></ul>
+    <p class="trackdetails__note">3&ndash;4 teams shortlisted per track for the final &middot; Winner &#8377;35,000 &middot; Runner-up &#8377;15,000</p>
+  </div>
+</dialog>
+
 <script src="js/prayas.js"></script>
 <script src="js/track-envelope.js"></script>
 <script src="js/brochure.js"></script>
+<script src="js/track-details.js"></script>
 </body>
 </html>
