@@ -1313,65 +1313,18 @@ main { position: relative; z-index: 1; }
 .foot__where { font-size: var(--t-small); color: var(--ice-55); }
 .foot__social { font-size: var(--t-small); font-weight: 500; }
 
-/* Sits at the end of the row on its own, right-aligned by the row's own
-   space-between rather than by any margin here. */
+/* Footnote: full-width line under the main row, set off by a rule and
+   quieted down so it reads as fine print rather than site copy. */
 .foot__disclaimer {
+  width: var(--shell);
+  margin: var(--gap-m) auto 0;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
   font-family: var(--font-body);
   font-size: var(--t-label);
-  color: var(--ice-38);
-  background: none;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: .3em .9em;
-  cursor: pointer;
-  transition: color .15s ease, border-color .15s ease;
-}
-.foot__disclaimer:hover,
-.foot__disclaimer:focus-visible { color: var(--ice-70); border-color: var(--ice-38); }
-
-/* -- the disclaimer itself ---------------------------------------------------
-   A native popover: light-dismiss (outside click, Escape) and top-layer
-   stacking come for free, so there is no backdrop click handler or z-index
-   fight with the pinned act to write by hand. Centred with the fixed/inset/
-   margin:auto recipe rather than anchor positioning, since it should read as
-   a standalone notice, not as a tooltip hanging off the button. */
-.disclaimer {
-  position: fixed;
-  inset: 0;
-  margin: auto;
-  width: min(92vw, 46ch);
-  max-height: 80vh;
-  overflow: auto;
-  padding: var(--gap-l) var(--gap-m);
-  background: var(--ink-sunk);
-  color: var(--ice-70);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
-  font-family: var(--font-body);
-  font-size: var(--t-small);
   line-height: 1.6;
+  color: var(--ice-38);
 }
-.disclaimer::backdrop { background: rgba(6, 6, 9, .6); }
-
-.disclaimer__close {
-  position: absolute;
-  top: var(--gap-xs);
-  right: var(--gap-xs);
-  width: 2rem;
-  height: 2rem;
-  display: grid;
-  place-items: center;
-  font-size: 1.3rem;
-  line-height: 1;
-  color: var(--ice-55);
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.disclaimer__close:hover,
-.disclaimer__close:focus-visible { color: var(--ice); background: var(--line); }
 
 
 /* ============================================================================
