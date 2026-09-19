@@ -895,6 +895,111 @@ main { position: relative; z-index: 1; }
   .trackdetails__close { transition: none; }
 }
 
+/* -- rules & guidelines modal --------------------------------------------
+   Same dark-panel family as .trackdetails, widened and given headed
+   sections since it carries several distinct topics rather than one
+   track's questions. ------------------------------------------------- */
+.eventrules {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  width: min(92vw, 58ch);
+  max-height: 84vh;
+  overflow: visible;
+  background: transparent;
+}
+.eventrules::backdrop {
+  background: rgba(6, 6, 9, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.eventrules__card {
+  position: relative;
+  max-height: 84vh;
+  overflow-y: auto;
+  padding: var(--gap-l) var(--gap-m);
+  background: var(--ink-sunk);
+  color: var(--ice-70);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+.eventrules__close {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-xs);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ice-55);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.eventrules__close:hover,
+.eventrules__close:focus-visible { color: var(--ice); background: var(--line); }
+
+.eventrules__kicker {
+  margin: 0 0 .3rem;
+  font-size: var(--t-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.eventrules__title {
+  margin: 0 0 var(--gap-m);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--ice);
+  padding-right: 2rem;
+}
+.eventrules__section { margin-bottom: var(--gap-m); }
+.eventrules__section h3 {
+  margin: 0 0 .5rem;
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+.eventrules__section ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+}
+.eventrules__section li { padding-left: 1rem; position: relative; }
+.eventrules__section li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--marigold-lo);
+}
+.eventrules__section strong { color: var(--ice); }
+.eventrules__note {
+  margin: var(--gap-m) 0 0;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
+  font-size: var(--t-label);
+  color: var(--ice-38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventrules__close { transition: none; }
+}
+
 /* ============================================================================
    ACT TWO — the hackathon
    ========================================================================= */
@@ -1036,6 +1141,39 @@ main { position: relative; z-index: 1; }
 .grid { display: grid; gap: var(--gap-m); }
 .grid--two  { grid-template-columns: repeat(2, 1fr); }
 .grid--four { grid-template-columns: repeat(4, 1fr); }
+
+/* -- flow-of-event schedule --------------------------------------------- */
+.schedule { display: flex; flex-direction: column; }
+.schedule__row {
+  display: grid;
+  grid-template-columns: 13ch 1fr 11ch;
+  gap: var(--gap-m);
+  align-items: baseline;
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.schedule__row:last-child { border-bottom: 0; }
+.schedule__row--head {
+  padding-top: 0;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ice-38);
+}
+.schedule__row p { margin: 0; font-size: var(--t-small); color: var(--ice-70); }
+.schedule__time { font-weight: 600; color: var(--marigold); }
+.schedule__venue { color: var(--ice-55); text-align: right; }
+
+@media (max-width: 720px) {
+  .schedule__row--head { display: none; }
+  .schedule__row {
+    grid-template-columns: 1fr;
+    gap: .2rem;
+    padding: .9rem 0;
+  }
+  .schedule__venue { text-align: left; font-size: var(--t-label); text-transform: uppercase; letter-spacing: .1em; }
+}
 
 .panel {
   --band: clamp(12px, 1.5vw, 20px);

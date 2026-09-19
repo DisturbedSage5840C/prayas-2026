@@ -504,11 +504,35 @@
         </div>
       </div>
 
+      <div class="block">
+        <h3 class="block__label">Flow of the event <span class="dot">&middot;</span> Sep 19&ndash;20</h3>
+        <div class="schedule">
+          <div class="schedule__row schedule__row--head" aria-hidden="true">
+            <p>Time</p><p>Activity</p><p>Venue</p>
+          </div>
+          <div class="schedule__row"><p class="schedule__time">9:00 &ndash; 11:00 AM</p><p>Registration, verification &amp; welcome kit distribution</p><p class="schedule__venue">Bharti Reception</p></div>
+          <div class="schedule__row"><p class="schedule__time">11:30 AM &ndash; 12:00 PM</p><p>Rules, guidelines &amp; code of conduct &mdash; tracks and problem statements revealed</p><p class="schedule__venue">1001</p></div>
+          <div class="schedule__row"><p class="schedule__time">12:00 PM</p><p>Hackathon commences &mdash; coding begins</p><p class="schedule__venue">1001</p></div>
+          <div class="schedule__row"><p class="schedule__time">12:00 &ndash; 2:30 PM</p><p>Lunch</p><p class="schedule__venue">Mess</p></div>
+          <div class="schedule__row"><p class="schedule__time">3:00 &ndash; 5:00 PM</p><p>Bid2Build</p><p class="schedule__venue">1002</p></div>
+          <div class="schedule__row"><p class="schedule__time">5:00 &ndash; 6:30 PM</p><p>Snacks</p><p class="schedule__venue">Mess</p></div>
+          <div class="schedule__row"><p class="schedule__time">5:30 &ndash; 7:30 PM</p><p>Corrupted File</p><p class="schedule__venue">1002</p></div>
+          <div class="schedule__row"><p class="schedule__time">7:30 &ndash; 8:00 PM</p><p>Dinner</p><p class="schedule__venue">1002 (packed)</p></div>
+          <div class="schedule__row"><p class="schedule__time">8:30 &ndash; 10:00 PM</p><p>Surprise!</p><p class="schedule__venue">&mdash;</p></div>
+          <div class="schedule__row"><p class="schedule__time">12:00 &ndash; 2:00 AM</p><p>Mid-hack evaluation by mentors</p><p class="schedule__venue">&mdash;</p></div>
+          <div class="schedule__row"><p class="schedule__time">9:00 &ndash; 11:00 AM, Sep 20</p><p>End-hack evaluation by mentors</p><p class="schedule__venue">&mdash;</p></div>
+          <div class="schedule__row"><p class="schedule__time">12:00 PM, Sep 20</p><p>Final submission deadline &mdash; code &amp; PPT</p><p class="schedule__venue">&mdash;</p></div>
+        </div>
+      </div>
+
       <div class="hack__cta">
         <p class="hack__ctatext">Registrations closed &mdash; inter-college teams of 3&ndash;4, BTech years 1 to 4.</p>
         <div class="hack__ctaactions">
           <button class="btn btn--lg btn--ghost" type="button" data-brochure-open aria-haspopup="dialog">
             View brochure <span class="btn__arrow" aria-hidden="true">&darr;</span>
+          </button>
+          <button class="btn btn--lg btn--ghost" type="button" data-eventrules-open aria-haspopup="dialog">
+            Rules &amp; guidelines <span class="btn__arrow" aria-hidden="true">&darr;</span>
           </button>
           <a class="btn btn--lg btn--disabled" aria-disabled="true" tabindex="-1">
             Registrations Closed
@@ -608,9 +632,69 @@
   </div>
 </dialog>
 
+<!-- ============================================================
+     Rules & guidelines — condensed from the full event-details
+     brief. A plain scrolling dialog, same dark-panel family as
+     the track-details modal.
+     ============================================================ -->
+<dialog class="eventrules" id="eventRules" aria-labelledby="eventrules-title">
+  <div class="eventrules__card">
+    <button type="button" class="eventrules__close" data-eventrules-close aria-label="Close rules and guidelines">&times;</button>
+    <p class="eventrules__kicker">Prayas &rsquo;26 &middot; Tech Hackathon</p>
+    <h2 class="eventrules__title" id="eventrules-title">Rules &amp; guidelines</h2>
+
+    <section class="eventrules__section">
+      <h3>ID &amp; venue access</h3>
+      <ul>
+        <li>Lanyard and ID must be worn at all times.</li>
+        <li>Permitted areas: Bharti Building, Gate 1, Summer/Winter Court, Mess.</li>
+        <li>From 8:00 PM to 8:00 AM, participants may not leave the Bharti Building.</li>
+        <li>Leaving the venue or campus requires organizer permission, except in emergencies.</li>
+      </ul>
+    </section>
+
+    <section class="eventrules__section">
+      <h3>Code of conduct</h3>
+      <ul>
+        <li>Treat participants, mentors, judges, volunteers, organizers and venue staff with respect.</li>
+        <li>Harassment, bullying, cheating, plagiarism, unauthorized external assistance and tampering with another team&rsquo;s work are strictly prohibited.</li>
+        <li>Zero tolerance for any inappropriate conduct involving minors (POCSO).</li>
+      </ul>
+    </section>
+
+    <section class="eventrules__section">
+      <h3>On campus</h3>
+      <ul>
+        <li>No smoking, vaping, alcohol, drugs, weapons or illegal activity.</li>
+        <li>Internet access is permitted for hackathon-related work.</li>
+        <li>Only registered team members may contribute &mdash; no external developers, remote teammates, remote access or outsourcing any part of the project.</li>
+      </ul>
+    </section>
+
+    <section class="eventrules__section">
+      <h3>Submission</h3>
+      <ul>
+        <li>Final deadline: <strong>12:00 PM, Sep 20</strong>. Every team submits project code on GitHub and a PPT.</li>
+        <li>After 12:00 PM: no code changes, commits, repository updates, or PPT edits. Any change after the deadline means immediate disqualification.</li>
+      </ul>
+    </section>
+
+    <section class="eventrules__section">
+      <h3>Evaluation, by mentors</h3>
+      <ul>
+        <li><strong>Mid-hack</strong> (12&ndash;2 AM): problem &amp; solution 50%, innovation 25%, feasibility 25%.</li>
+        <li><strong>End-hack</strong> (9&ndash;11 AM, Sep 20): problem &amp; solution 25%, innovation 25%, feasibility 25%, prototype &amp; demo 25%.</li>
+      </ul>
+    </section>
+
+    <p class="eventrules__note">Serious violations of any of the above may result in immediate disqualification and/or removal from the venue.</p>
+  </div>
+</dialog>
+
 <script src="js/prayas.js"></script>
 <script src="js/track-envelope.js"></script>
 <script src="js/brochure.js"></script>
 <script src="js/track-details.js"></script>
+<script src="js/event-rules.js"></script>
 </body>
 </html>
