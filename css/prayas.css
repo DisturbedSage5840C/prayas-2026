@@ -754,6 +754,8 @@ main { position: relative; z-index: 1; }
 .brochure .card__body {
   max-height: 88vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding-block: clamp(.4rem, 2vw, 1rem);
 }
 
@@ -802,6 +804,301 @@ main { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) {
   .brochure__close { transition: none; }
   .brochure__close:hover { transform: none; }
+}
+
+/* ============================================================================
+   Track details modal
+
+   Plain dark dialog rather than the brochure's illustrated plate — this is
+   read, not admired, so it stays a text panel: kicker, name, the guiding
+   questions as a list, one shared note for the prize/shortlist mechanics
+   that are the same across all four tracks.
+   ========================================================================= */
+
+.trackdetails {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  width: min(92vw, 46ch);
+  max-height: 84vh;
+  overflow: visible;
+  background: transparent;
+}
+.trackdetails::backdrop {
+  background: rgba(6, 6, 9, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.trackdetails__card {
+  position: relative;
+  max-height: 84vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--gap-l) var(--gap-m);
+  background: var(--ink-sunk);
+  color: var(--ice-70);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+
+.trackdetails__close {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-xs);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ice-55);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.trackdetails__close:hover,
+.trackdetails__close:focus-visible { color: var(--ice); background: var(--line); }
+
+.trackdetails__kicker {
+  margin: 0 0 .3rem;
+  font-size: var(--t-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.trackdetails__title {
+  margin: 0 0 var(--gap-s);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--ice);
+  padding-right: 2rem;
+}
+.trackdetails__questions {
+  margin: 0 0 var(--gap-m);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+}
+.trackdetails__note {
+  margin: 0;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
+  font-size: var(--t-label);
+  color: var(--ice-38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackdetails__close { transition: none; }
+}
+
+/* -- rules & guidelines modal --------------------------------------------
+   Same dark-panel family as .trackdetails, widened and given headed
+   sections since it carries several distinct topics rather than one
+   track's questions. ------------------------------------------------- */
+.eventrules {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  width: min(92vw, 58ch);
+  max-height: 84vh;
+  overflow: visible;
+  background: transparent;
+}
+.eventrules::backdrop {
+  background: rgba(6, 6, 9, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.eventrules__card {
+  position: relative;
+  max-height: 84vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--gap-l) var(--gap-m);
+  background: var(--ink-sunk);
+  color: var(--ice-70);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+.eventrules__close {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-xs);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ice-55);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.eventrules__close:hover,
+.eventrules__close:focus-visible { color: var(--ice); background: var(--line); }
+
+.eventrules__kicker {
+  margin: 0 0 .3rem;
+  font-size: var(--t-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.eventrules__title {
+  margin: 0 0 var(--gap-m);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--ice);
+  padding-right: 2rem;
+}
+.eventrules__section { margin-bottom: var(--gap-m); }
+.eventrules__section h3 {
+  margin: 0 0 .5rem;
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+.eventrules__tag {
+  margin-left: .5em;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--crimson-hot);
+}
+.eventrules__section ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+}
+.eventrules__section li { padding-left: 1rem; position: relative; }
+.eventrules__section li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--marigold-lo);
+}
+.eventrules__section strong { color: var(--ice); }
+.eventrules__section li.eventrules__do::before  { background: var(--mint); }
+.eventrules__section li.eventrules__dont::before { background: var(--crimson); }
+.eventrules__note {
+  margin: var(--gap-m) 0 0;
+  padding-top: var(--gap-s);
+  border-top: 1px solid var(--line);
+  font-size: var(--t-label);
+  color: var(--ice-38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventrules__close { transition: none; }
+}
+
+/* -- venue map modal ------------------------------------------------------
+   Same image + caption shape as .brochure, in the dark .eventrules card
+   family rather than the illustrated plate — this is a reference photo,
+   not a printed object. ------------------------------------------------ */
+.venuemap {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  width: min(94vw, 640px);
+  max-height: 90vh;
+  overflow: visible;
+  background: transparent;
+}
+.venuemap::backdrop {
+  background: rgba(6, 6, 9, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.venuemap__card {
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--gap-l) var(--gap-m);
+  background: var(--ink-sunk);
+  color: var(--ice-70);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+.venuemap__close {
+  position: absolute;
+  top: var(--gap-xs);
+  right: var(--gap-xs);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ice-55);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.venuemap__close:hover,
+.venuemap__close:focus-visible { color: var(--ice); background: var(--line); }
+.venuemap__kicker {
+  margin: 0 0 .3rem;
+  font-size: var(--t-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.venuemap__title {
+  margin: 0 0 var(--gap-s);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--ice);
+  padding-right: 2rem;
+}
+.venuemap__figure { margin: 0; }
+.venuemap__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(238, 254, 255, .16);
+}
+.venuemap__figure figcaption {
+  margin-top: .6rem;
+  font-size: var(--t-label);
+  letter-spacing: .05em;
+  color: var(--ice-55);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venuemap__close { transition: none; }
 }
 
 /* ============================================================================
@@ -945,6 +1242,39 @@ main { position: relative; z-index: 1; }
 .grid { display: grid; gap: var(--gap-m); }
 .grid--two  { grid-template-columns: repeat(2, 1fr); }
 .grid--four { grid-template-columns: repeat(4, 1fr); }
+
+/* -- flow-of-event schedule --------------------------------------------- */
+.schedule { display: flex; flex-direction: column; }
+.schedule__row {
+  display: grid;
+  grid-template-columns: 13ch 1fr 11ch;
+  gap: var(--gap-m);
+  align-items: baseline;
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.schedule__row:last-child { border-bottom: 0; }
+.schedule__row--head {
+  padding-top: 0;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ice-38);
+}
+.schedule__row p { margin: 0; font-size: var(--t-small); color: var(--ice-70); }
+.schedule__time { font-weight: 600; color: var(--marigold); }
+.schedule__venue { color: var(--ice-55); text-align: right; }
+
+@media (max-width: 720px) {
+  .schedule__row--head { display: none; }
+  .schedule__row {
+    grid-template-columns: 1fr;
+    gap: .2rem;
+    padding: .9rem 0;
+  }
+  .schedule__venue { text-align: left; font-size: var(--t-label); text-transform: uppercase; letter-spacing: .1em; }
+}
 
 .panel {
   --band: clamp(12px, 1.5vw, 20px);
@@ -1246,6 +1576,26 @@ main { position: relative; z-index: 1; }
   color: var(--on-paper);
   line-height: 1.25;
 }
+
+/* The one interactive control inside the paper letter — sits below the
+   revealed name, styled as fine print rather than a full button so it
+   doesn't compete with the reveal itself. */
+.track__details {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: var(--seal, var(--brick));
+  background: none;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+  transition: opacity .15s ease;
+}
+.track__details:hover,
+.track__details:focus-visible { opacity: .7; }
 
 @media (prefers-reduced-motion: reduce) {
   .track__flap, .track__wax, .track__letter { transition-duration: .01ms; }
